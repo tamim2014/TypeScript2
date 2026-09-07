@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Jour5/Exos</title><!-- Mardi 02.06.26  -->
+	<link rel="stylesheet" href="dependance/prism.css" media="screen" />
+    <link rel="stylesheet" href="dependance/dark.css" >
+    <link rel="stylesheet" href="dependance/pagination.css" >
+    <link rel="stylesheet" href="dependance/footer.css" ><!-- footer ndreda -->	
+	<link rel="stylesheet" href="dependance/flexfooter.css" >
+	
+	<script src="dependance/prism.js" type="text/javascript" ></script>
+	<script src="dependance/pagination.js" defer type="text/javascript" ></script>
+</head>
+
+<body>
+<header> 
+	
+	<div class="content-footer"> 
+         	
+		 <div class="ndreda-footer" style="padding:0;" >  
+			<!-- animation du footer -->
+			<div style="position: relative; top:0; right:auto; width:auto;">		
+				<div class="wrapper" style=" ">
+					<div class="obj"></div>
+					<div class="obj"></div>
+				</div>
+				
+			</div>	
+			<!-- contenu du footer -->
+			<div id="ndreda-footerG" style="width:100%;" >
+			    <h1>🛡️ Types avancés + logique métier + tests paramétrés  </h1>
+			</div>
+		</div>		
+		 <small class="copyright_"><span style="color:gray;">Jour5  -</span> <i style="color:#555">Exercices</i></small> 
+		 <span class="marfa3 logo-emoji">🔷</span>
+	</div>	  
+</header>
+
+
+<div class="conteneur-reponses separateur1"></div> <!-- séparateur -->
+<main class="contenu">
+<!-- <h1>🛡️ Feuille de Route Sécurité — Lundi 25.05.26</h1>  -->
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q1: Type avancé</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Définir un type générique Box&lt;T> </h4>
+        <div class="task">
+            <input type="checkbox" id="t11">
+            <label for="t11">Enoncé: Crée un type OnlyStringProps&lt;T> qui ne garde que les propriétés de type string.  </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//Exemple :
+					interface User {
+					  email: string;
+					  password: string;
+					  age: number;
+					}
+					//Ton type doit produire :
+					{
+					  email: string;
+					  password: string;
+					}
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t12">
+            <label for="t12">Solution <a href="j5cours.html#j???" target="_blank" style="text-decoration:none !important; color:inherit;">👉 Cf. Jour5/Cours/1.3</a></label>
+			<div class="script">
+				<pre><code class="language-ts">
+					type OnlyStringProps&lt;T> = {
+					  [K in keyof T as T[K] extends string ? K : never]: T[K];
+
+					  // Cf. Jour5/1.3 — Types conditionnels avancés.
+					  // [K in keyof T as T[K] ]= [K in keyof T]: T[K]   est-ce la mm chose?
+
+					};
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t13">
+            <label for="t13">Explication </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					✔️ Explication factory style
+						  - On parcourt toutes les clés K de T
+						  - On garde uniquement celles dont le type est string
+						  - Les autres deviennent never → donc supprimées
+						  
+					✔️ Exemple
+					interface User {
+					  email: string;
+					  password: string;
+					  age: number;
+					}
+
+					type OnlyStrings = OnlyStringProps&lt;User>;
+
+					Résultat :
+					{
+					  email: string;
+					  password: string;
+					}
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exeo1/Q2: Logique métier typée </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Dataset </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t21">
+            <label for="t21">Enoncé: On te donne les types Role/Permissions pour construire un "<b>Dataset</b>" typé</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					type Role = "admin" | "user" | "guest";
+
+					type Permissions = {
+					  dashboard: boolean;
+					  settings: boolean;
+					  billing: boolean;
+					};
+
+					CONSTRUIRE UN "dataset typé" :
+					const permissions: Record&lt;Role, Permissions> = {
+					  // admin: ...
+					  // user: ...
+					  // guest: ...
+					};
+					Tu remplis les permissions selon TA logique métier.
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t22">
+            <label for="t22">Solution 👉 Cf. Jour5/Cours/2.4</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Datasset 
+
+					const permissions: Record&lt;Role, Permissions> = {
+					  admin: { dashboard: true, settings: true, billing: true },
+					  user: { dashboard: true, settings: false, billing: false },
+					  guest: { dashboard: false, settings: false, billing: false }
+					};
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t23">
+            <label for="t23">Explication</label>
+			<div class="script">
+				<pre><code class="language-java">
+					🔹 Admin → accès total
+					🔹 User → accès limité
+					🔹 Guest → accès minimal
+
+					Tu px mettre le type dans une variable RolePermissions: 
+					  type RolePermissions = Record&lt;Role, Permissions>;   =>   const permissions: RolePermissions 
+
+					Tu peux changer la logique, mais celle-ci est cohérente.
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q3: Dataset d’utilisateurs </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Construire un dataset typé  </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t31">
+            <label for="t31">Enoncé: On te donne le type. Construit le Dataset typé</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					interface TestUser {
+					  email: string;
+					  password: string;
+					  role: Role;
+					}
+
+					const users: TestUser[] = [
+					  // admin
+					  // user
+					  // guest
+					];
+
+
+					Tu mets les emails et mots de passe que tu veux.  
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t32">
+            <label for="t32">Solution </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Dataset
+					const users: TestUser[] = [
+					  {  email: "admin@test.com",  password: "123456",  role: "admin" }, 
+					  {  email: "user@test.com",   password: "123456", role: "user" },
+					  {  email: "guest@test.com",  password: "guest",  role: "guest" }
+					];
+
+					✔️ Explication
+						  - Dataset simple
+						  - Typé
+						  - Compatible avec les tests paramétrés
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q4: Test paramétré Playwright </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Tester la permission d'accès au dashboard </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t41">
+            <label for="t41">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-java">
+					👉 Écris un test qui :
+
+					   1.boucle sur users // for (const u of users)
+
+					   2.tente de se connecter
+
+					   3.vérifie l’accès au dashboard selon permissions[u.role].dashboard
+
+					Structure :
+					for (const u of users) {
+					  test(`login test for ${u.role}`, async ({ page }) => {
+						// 1. login
+						// 2. vérifier accès selon permissions[u.role].dashboard
+					  });
+					}
+					Tu écris la logique toi-même.
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t42">
+            <label for="t42">Solution🌱 &emsp;👉 Cf.  Jour5/Cours/4.1</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { test, expect } from "@playwright/test";
+
+					for (const u of users) {
+					  test(`login test for ${u.role}`, async ({ page }) => {
+						// 1. Se connecter: Aller à la page de login
+						await page.goto("https://site.com/login");
+
+						// 2. Remplir les champs 👉  Cf  Jour5/Cours/4.1
+						await page.fill("#email", u.email); // await loginPage.email.fill(u.email);
+						await page.fill("#password", u.password); // await loginPage.password.fill(u.password);
+						await page.click("#submit"); // await loginPage.submit.click();
+
+
+						// 3. Vérifier l'accès selon les permissions
+						const canAccessDashboard = permissions[u.role].dashboard;
+
+						if (canAccessDashboard) {
+						  await expect(page).toHaveURL(/dashboard/);
+						} else {
+						  await expect(page).not.toHaveURL(/dashboard/);
+						}
+					  });
+					}
+			    </code></pre>
+			</div>
+        </div>
+		
+		
+		<div class="task">
+            <input type="checkbox" id="t42">
+            <label for="t42">Explication</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					✔️ Explication
+						 - Le test tourne 3 fois (admin, user, guest)
+
+						 - La logique métier est centralisée dans permissions
+
+						 - Le test ne contient aucune duplication
+
+						 - Architecture propre, scalable, professionnelle
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="accordion-title">🧱 Résumé (factory style) </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Personaliser ses type pour des tests parametrés(réutilisables)</h4>
+
+        <div class="task">
+            <input type="checkbox" id="t51">
+            <!-- <label for="t51">Enoncé</label> -->
+			<div class="script">
+				<pre><code class="language-ts">
+					  ✔️ OnlyStringProps&lt;T> → type avancé qui filtre les propriétés string
+
+					  ✔️ Role + Permissions → logique métier typée
+
+					  ✔️ users[] → dataset dynamique
+
+					  ✔️ Tests paramétrés → boucle sur les utilisateurs + règles d’accès
+
+					  ✔️ Architecture propre, claire, scalable
+
+					  ✔️ Tu viens d’atteindre le niveau “QA Automation Architect”
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+    <!--  PAGINATION  -->
+	<div class="tabcontent" id="tabcontent" style=" margin-top:3em; margin-bottom:0; " >
+		  <section class="containerPagination"  > 
+			<nav class="pagination"  >
+			  <a class="prev">&laquo;</a>
+			  <a   href="index.html"  class="btn popup">
+			      1
+				  <span class="popuptext">Sécurité procedurale !</span>
+			  </a>
+			  <a   href="secusymfony.html"   class="btn popup-bottom">
+			       2
+				   <span class="popuptext">Sécurité symfony !</span>
+			  </a> 
+			  <a   href="j3cours.html"  class="btn popup  default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j4cours.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j5cours.html"  class="btn popup">
+			       5
+				   <span class="popuptext"> /////</span>
+			  </a>
+			  <a   href="j6cours.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">6666666666666<br> Cours... </span>
+			  </a>
+			  <a   href="j7cours.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777777<br> Cours... </span>
+			  </a>
+			  <a class="next">&raquo;</a>
+			</nav>
+			<nav class="pagination pagination-blue">
+			  <a class="prev">&laquo;</a>
+			  <a    onclick="filterSelection('ibnAtiyya')" class="btn" >1</a>
+			  <a    onclick="filterSelection('ar-Râzî')"   class="btn" >2</a>
+			  <a   href="#"  class="btn popup default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Exercices... </span>
+			  </a>
+			  <a   href="j4exos.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancées<br> Exercices... </span>
+			  </a>
+			  <a   href="#"  class="btn popup activer">
+			       5
+				   <span class="popuptext">Type avancé<br> Exercices... </span>
+			  </a>
+			  <a   href="j6exos.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">666666666666<br> Exercices... </span>
+			  </a>
+			  <a   href="j7exos.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777<br> Exercices... </span>
+			  </a>			  
+			  <!-- <a    onclick="filterSelection('zawawi')"    class="btn activer" style="display:none;">5</a>  Pourquoi je fais ça? car class "activer" doit être intialement présent sur un bouton pour pour se propager sur les autres bouton suivant le clic utilisateur. Je met un "display:none" car je ne veux pas voir de btn enfoncé  tant que l'utilisateur ne l'a pas touché.( un peu long ce p'tit bavardage mé cpa grav)  -->
+			  <a id="btnNotes" class="next btn popup toggle-btn" onclick="toggleNotes();">
+					&raquo;
+					<span class="popuptext" id="myPopup">Notes de bas de page !</span>
+			  </a>
+			</nav>
+		  </section> 
+	</div>		
+	<!--  fin PAGINATION  -->
+</main>
+
+
+<div id="notes" class="footer-notes"> <!--  Repliable (comme un panneau d’admin)    -->
+	<div class="conteneur-reponses"></div> <!-- séparateur -->
+	<footer style="height:auto; padding:0;" >     
+		<h3>
+		  Objectif: Inventer des types (puissants, réutilisables, propres)  
+		</h3>	
+		<div class="flexfooter">
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">1. Les types utilitaires:</h4>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Partial&lt;T></li>
+				      <li> ✔ Required&lt;T></li>
+				      <li> ✔ Readonly&lt;T></li>
+				      <li> ✔ Pick&lt;T></li>
+				      <li> ✔ Omit<&lt;T></li>
+				      <li> ✔ Record&lt;T></li>
+				      <li> ✔ ReturnType&lt;T></li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     permettent de tranceformer des types existants.<br>
+					 👉 Ce sont les “super‑pouvoirs” de TypeScript.
+				   </p>
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">2. Les génériques</h4>
+				   <b>function identity&lt;T>(value: T): T { ... }</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ ça permet d'inventer des types flexibles</li>
+				      <li> ✔ ça évite les répétitions </li>
+				      <li> ✔ ça améliore la sécurité du code</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     C'est pour de tranceformer des types existants.<br>
+					 👉C’est le cœur du TypeScript moderne.
+				   </p>
+				   
+
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">3. Generic Interfaces & Types</h4>
+				   <b>On parle d'Interfaces génériques avancées et de types paramétrés </b>
+				   <p style="padding-bottom:0; margin-bottom:0;">
+				      Comment écrire : 
+				   </p>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> interface ApiResponse&lt;T> {</li>
+				      <li> &emsp;data: T; </li>
+				      <li> &emsp;status: number;</li>
+				      <li> }</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+					Et comment les utiliser avec :<br>
+					  &emsp;→  Des types complexes, des objets, <br>
+					  &emsp;→  des tableaux, des fonctions<br>
+					👉 C’est ce qui permet de modéliser des réponses API, des actions Playwright📌, etc. 
+				   </p>
+				   
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">4. Fonctions typées avancées</h4>
+				   <b>Il y en a 3 fonctions typées:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Les fonctions génériques,</li>
+				      <li> ✔ les fonctions qui retournent des types complexes </li>
+				      <li> ✔ les fonctions qui manipulent des objets typés</li>
+				      <li> ✔ et les signatures de fonction</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉 Ça te prépare directement à Playwright, <br>
+					  car Playwright utilise énormément de types complexes.
+				   </p>
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">5. Les types conditionnels</h4>
+				   <b>C’est le niveau “maestro”:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li></li>
+				      <li>  T extends U ? X : Y </li>
+				      <li> </li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉C’est ce qui permet à TypeScript d’être intelligent.
+				   </p>
+				  
+				 
+			
+				  </p>
+
+			</div>
+		</div>
+		
+		<div class="content-footer" style="margin-top:0;">         
+			<div class="ndreda-footer"> 		  
+				<ul type="square">
+					<li>Generic Types : Types paramétrés</li>
+					<li>Generic Interfaces: Interfaces génériques</li>
+					<li>Call signatures: Signatures de fonction </li>
+				</ul>
+			</div>		
+			<span class="copyright_"><span style="color:gray;">2019 &copy; -</span> Master Handi</span>
+		</div>	  
+	</footer>
+</div>
+
+<script>
+    const PAGE_PREFIX = "layout_"; 
+</script>
+<script src="dependance/checklist.js"></script>
+
+</body>
+</html>

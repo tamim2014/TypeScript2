@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Jour3</title><!-- Mardi 02.06.26  -->
+	<link rel="stylesheet" href="dependance/prism.css" media="screen" />
+    <link rel="stylesheet" href="dependance/dark.css" >
+    <link rel="stylesheet" href="dependance/pagination.css" >
+    <link rel="stylesheet" href="dependance/footer.css" ><!-- footer ndreda -->	
+	<link rel="stylesheet" href="dependance/flexfooter.css" >
+	
+	<script src="dependance/prism.js" type="text/javascript" ></script>
+	<script src="dependance/pagination.js" defer type="text/javascript" ></script>
+</head>
+
+<body>
+<header> 
+	
+	<div class="content-footer"> 
+         	
+		 <div class="ndreda-footer" style="padding:0;" >  
+			<!-- animation du footer -->
+			<div style="position: relative; top:0; right:auto; width:auto;">		
+				<div class="wrapper" style=" ">
+					<div class="obj"></div>
+					<div class="obj"></div>
+				</div>
+				
+			</div>	
+			<!-- contenu du footer -->
+			<div id="ndreda-footerG" style="width:100%;" >
+			    <h1>🛡️  “Gestion d’Actions Typées”  </h1>
+			</div>
+		</div>		
+		 <small class="copyright_"><span style="color:gray;">Jour3  -</span> <i style="color:#555">Exercices</i></small> 
+		 <span class="marfa3 logo-emoji">🔷</span>
+	</div>	  
+</header>
+
+
+<div class="conteneur-reponses separateur1"></div> <!-- séparateur -->
+<main class="contenu">
+<!-- <h1>🛡️ Feuille de Route Sécurité — Lundi 25.05.26</h1>  -->
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q1: Les types utilitaires (Utility Types)</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Définir un type générique Box&lt;T> </h4>
+        <div class="task">
+            <input type="checkbox" id="t11">
+            <label for="t11">Enoncé  </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Il contient : 
+					{ value: T;   timestamp: number; }
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t12">
+            <label for="t12">Solution <a href="j3cours.html#j323" target="_blank" style="text-decoration:none !important; color:inherit;">👉 Cf. Jour3/Cours/2.3</a></label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Ces 3 version sont valides:
+					
+					type Box&lt;T> = {   value: T, timestamp: number, };
+					
+					type Box&lt;T> = {   value: T; timestamp: number; };
+					
+					interface Box&lt;T> { value: T;  timestamp: number; }
+					let s: Box<string> = { value: "Hello", timestamp:Date.now()  };
+
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exeo1/Q2: Interface générique Action&lt;TPayload> </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Ecrire une interface générique Action&lt;TPayload> </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t21">
+            <label for="t21">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Elle contient:  
+					{ type: string;  payload: TPayload; } 
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t22">
+            <label for="t22">Solution 👉 Cf. Jour3/Cours/3.6</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					interface Action&lt;TPayload> {
+					   type: string;
+					   payload: TPayload; // charge utile = données essentielles( transmises ou exécutées) 👉 Tu peux typer le payload avec n’importe quoi
+					}
+					// Exple: Si TPayload = Gesture 👈 Jour2/Exo2/Q3
+					let clickAction: Action&lt;Gesture> = {
+					   type: "CLICK",
+					   payload: { 
+					         type:"click",
+					         target: "#login",
+					         options: { button: "left" }
+					   } 
+					};
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q3: Ecrire un type GestureAction - alias </div>
+    <div class="accordion-content">
+
+        <h4>Objets: C'est un alias: type GestureAction = Action&lt;Gesture>; </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t31">
+            <label for="t31">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					Syntaxe définition d'un type alias?  
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t32">
+            <label for="t32">Solution 👉 Cf. Cour3/Cours/2.7</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					type GestureAction = Action&lt;Gesture>;
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q4: Ecrie une fonction générique </div>
+    <div class="accordion-content">
+
+        <h4>Objets: wrap&lt;T>(value: T): Box&lt;T> </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t41">
+            <label for="t41">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Elle doit retourner:  
+					{  value: value, timestamp: Date.now() } 
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t42">
+            <label for="t42">Solution 👉 Cf.  Jour3/Cours/4.3</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					function wrap&lt;T>(value: T): Box&lt;T> {
+					  return { value: value, timestamp: Date.now() }; // le type de value dépend du type du paramèttre T
+					}
+					wrap("Hello"); // { value: "Hello", timestamp: Date.now()  }
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q5: Ecrire une fonction createGestureAction(g: Gesture): GestureAction </div>
+    <div class="accordion-content">
+
+        <h4>Objets: fonction qui retourne un objet typé </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t51">
+            <label for="t51">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Elle doit retourner :  
+					{ type: "GESTURE", payload: g } 
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t52">
+            <label for="t52">Solution 👉 GestureAction est définie à la question3: C'est un alias de Action&lt;Gesture> - Cf. Jour3/Cours/2.7</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					function createGestureAction(g: Gesture): GestureAction {
+						 return { type: "GESTURE",  payload: g };  
+					}
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exeo1/Q6: type GesturePatch +  f° patchGesture </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Fonction avec un paramètre alias </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t61">
+            <label for="t61">Enoncé: </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// 6.1 Définir un type GesturePatch = Partial&lt;Gesture>  pour l'utilisear dans la fonction suivante  
+					// 6.2 function patchGesture(g: Gesture, patch: GesturePatch): Gesture  
+
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t62">
+            <label for="t62">Solution 👉 Cf. CoursJ3/Cours/1.1 - Utility types</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// 6.1 Type Alias: GesturePatch
+					type GesturePatch = Partial&lt;Gesture>;
+					//➡️ Partial&lt;Gesture> = un objet qui peut contenir 0, 1, 2 ou 3 propriétés de Gesture.
+
+					//6.2 Fonction patchGesture
+					function patchGesture(g: Gesture, patch: GesturePatch): Gesture {
+					   return {
+					         ...g,
+					         ...patch
+					   }; 
+					}
+					//➡️ patchGesture doit fusionner l’objet original g avec les modifications patch.
+					//➡️ La syntaxe ...g + ...patch est conventionnel. C'est la façon de faire un patch en TypeScript.
+
+					REFERENCES DE COURS
+					//✔️ Gesture ->   payload: { type: "click", target: "#login", options: { button: "left" } } 👉  Cf. ???
+					//✔️ Partial -> prend donc une partie ou tous les 3 paramètres ( 1 ou 2paramètres) 👉 Cf Jour3/Cours/1.1 - Utility types
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q7: Dictionnaire typé </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Utiliser un dictionnaire typé dans une fonction </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t71">
+            <label for="t71">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// 7.1 Définir un dictionnaire typé avec l'alias  GestureStore: Record&lt;string, Gesture>
+					// 7.2 Utiliser l'alias defini dans une  function addGesture(store: GestureStore, name: string, gesture: Gesture): GestureStore
+					//      Cette fonction doit retourner un nouvel store( avec le geste ajouté).
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t72">
+            <label for="t72">Solution 👉 Cf. Jour3/Cours/1.6  - Utility types</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// 7.1 Alias GestureStore
+					type GestureStore = Record&lt;string, Gesture>;
+					//➡️ Record&lt;string, Gesture> = un dictionnaire où chaque clé est un string, et chaque valeur un Gesture.
+
+					//7.2 Fonction addGesture
+					function addGesture(store: GestureStore, name: string, gesture: Gesture): GestureStore {
+					   return {
+					         ...store,
+					         [name]: gesture
+					   }; 
+					}
+					//➡️ [name]: gesture 👉 Syntaxe conventionnel pour ajouter une entrée dynamique.
+
+					REFERENCES DE COURS
+					//✔️  Record -> 👉  Jour3/Cours/1.6  - Utility types
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+
+    
+    
+    <!--  PAGINATION  -->
+	<div class="tabcontent" id="tabcontent" style=" margin-top:3em; margin-bottom:0; " >
+		  <section class="containerPagination"  > 
+			<nav class="pagination"  >
+			  <a class="prev">&laquo;</a>
+			  <a   href="index.html"  class="btn popup">
+			      1
+				  <span class="popuptext">Sécurité procedurale !</span>
+			  </a>
+			  <a   href="secusymfony.html"   class="btn popup-bottom">
+			       2
+				   <span class="popuptext">Sécurité symfony !</span>
+			  </a> 
+			  <a   href="j3cours.html"  class="btn popup  default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j4cours.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j5cours.html"  class="btn popup">
+			       5
+				   <span class="popuptext">Tests paramétrés<br> Cours... </span>
+			  </a>
+			  <a   href="j6cours.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">6666666666666<br> Cours... </span>
+			  </a>
+			  <a   href="j7cours.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777777<br> Cours... </span>
+			  </a>
+			  <a class="next">&raquo;</a>
+			</nav>
+			<nav class="pagination pagination-blue">
+			  <a class="prev">&laquo;</a>
+			  <a    onclick="filterSelection('ibnAtiyya')" class="btn" >1</a>
+			  <a    onclick="filterSelection('ar-Râzî')"   class="btn" >2</a>
+			  <a   href="#"  class="btn popup activer default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Exercices... </span>
+			  </a>
+			  <a   href="j4exos.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancées<br> Exercices... </span>
+			  </a>
+			  <a   href="j5exos.html"  class="btn popup">
+			       5
+				   <span class="popuptext">Type avancé<br> Exercices... </span>
+			  </a>
+			  <a   href="j6exos.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">666666666666<br> Exercices... </span>
+			  </a>
+			  <a   href="j7exos.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777<br> Exercices... </span>
+			  </a>
+			  <!-- <a    onclick="filterSelection('zawawi')"    class="btn activer" style="display:none;">5</a>  Pourquoi je fais ça? car class "activer" doit être intialement présent sur un bouton pour pour se propager sur les autres bouton suivant le clic utilisateur. Je met un "display:none" car je ne veux pas voir de btn enfoncé  tant que l'utilisateur ne l'a pas touché.( un peu long ce p'tit bavardage mé cpa grav)  -->
+			  <a id="btnNotes" class="next btn popup toggle-btn" onclick="toggleNotes();">
+					&raquo;
+					<span class="popuptext" id="myPopup">Notes de bas de page !</span>
+			  </a>
+			</nav>
+		  </section> 
+	</div>		
+	<!--  fin PAGINATION  -->
+</main>
+
+
+<div id="notes" class="footer-notes"> <!--  Repliable (comme un panneau d’admin)    -->
+	<div class="conteneur-reponses"></div> <!-- séparateur -->
+	<footer style="height:auto; padding:0;" >     
+		<h3>
+		  Objectif: Inventer des types (puissants, réutilisables, propres)  
+		</h3>	
+		<div class="flexfooter">
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">1. Les types utilitaires:</h4>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Partial&lt;T></li>
+				      <li> ✔ Required&lt;T></li>
+				      <li> ✔ Readonly&lt;T></li>
+				      <li> ✔ Pick&lt;T></li>
+				      <li> ✔ Omit<&lt;T></li>
+				      <li> ✔ Record&lt;T></li>
+				      <li> ✔ ReturnType&lt;T></li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     permettent de tranceformer des types existants.<br>
+					 👉 Ce sont les “super‑pouvoirs” de TypeScript.
+				   </p>
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">2. Les génériques</h4>
+				   <b>function identity&lt;T>(value: T): T { ... }</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ ça permet d'inventer des types flexibles</li>
+				      <li> ✔ ça évite les répétitions </li>
+				      <li> ✔ ça améliore la sécurité du code</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     C'est pour de tranceformer des types existants.<br>
+					 👉C’est le cœur du TypeScript moderne.
+				   </p>
+				   
+
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">3. Generic Interfaces & Types</h4>
+				   <b>On parle d'Interfaces génériques avancées et de types paramétrés </b>
+				   <p style="padding-bottom:0; margin-bottom:0;">
+				      Comment écrire : 
+				   </p>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> interface ApiResponse&lt;T> {</li>
+				      <li> &emsp;data: T; </li>
+				      <li> &emsp;status: number;</li>
+				      <li> }</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+					Et comment les utiliser avec :<br>
+					  &emsp;→  Des types complexes, des objets, <br>
+					  &emsp;→  des tableaux, des fonctions<br>
+					👉 C’est ce qui permet de modéliser des réponses API, des actions Playwright📌, etc. 
+				   </p>
+				   
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">4. Fonctions typées avancées</h4>
+				   <b>Il y en a 3 fonctions typées:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Les fonctions génériques,</li>
+				      <li> ✔ les fonctions qui retournent des types complexes </li>
+				      <li> ✔ les fonctions qui manipulent des objets typés</li>
+				      <li> ✔ et les signatures de fonction</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉 Ça te prépare directement à Playwright, <br>
+					  car Playwright utilise énormément de types complexes.
+				   </p>
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">5. Les types conditionnels</h4>
+				   <b>C’est le niveau “maestro”:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li></li>
+				      <li>  T extends U ? X : Y </li>
+				      <li> </li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉C’est ce qui permet à TypeScript d’être intelligent.
+				   </p>
+				  
+				 
+			
+				  </p>
+
+			</div>
+		</div>
+		
+		<div class="content-footer" style="margin-top:0;">         
+			<div class="ndreda-footer"> 		  
+				<ul type="square">
+					<li>Generic Types : Types paramétrés</li>
+					<li>Generic Interfaces: Interfaces génériques</li>
+					<li>Call signatures: Signatures de fonction </li>
+				</ul>
+			</div>		
+			<span class="copyright_"><span style="color:gray;">2019 &copy; -</span> Master Handi</span>
+		</div>	  
+	</footer>
+</div>
+
+<script>
+    const PAGE_PREFIX = "layout_"; 
+</script>
+<script src="dependance/checklist.js"></script>
+
+</body>
+</html>

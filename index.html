@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Feuille de Route Sécurité</title><!-- Lundi 25.05.26  -->
+	<link rel="stylesheet" href="dependance/prism.css" media="screen" />
+    <link rel="stylesheet" href="dependance/dark.css" >
+    <link rel="stylesheet" href="dependance/pagination.css" >
+    <link rel="stylesheet" href="dependance/footer.css" ><!-- footer ndreda -->	
+    <link rel="stylesheet" href="dependance/flexfooter.css" >
+		
+	<script src="dependance/prism.js" type="text/javascript" ></script>
+	<script src="dependance/pagination.js" defer type="text/javascript" ></script>
+</head>
+
+<body>
+<header  > 
+	
+	<div class="content-footer"> 
+         	
+		 <div class="ndreda-footer" style="padding:0;" >  
+			<!-- animation du footer -->
+			<div style="position: relative; top:0; right:auto; width:auto;">		
+				<div class="wrapper" style=" ">
+					<div class="obj"></div>
+					<div class="obj"></div>
+				</div>
+				
+			</div>	
+			<!-- contenu du footer -->
+			<div id="ndreda-footerG" style="width:100%;" >
+			    <h1>🛡️ Feuille de Route Sécurité(Procédurale) </h1>
+			</div>
+		</div>		
+		 <small class="copyright_"><span style="color:gray;">2026 &copy; -</span> <i style="color:#555">Garges Les Gonesse</i></small> 
+		 <!-- <img src="img/logo.png"    class="marfa3"/> -->
+		 <span class="marfa3 logo-emoji">🔷</span>
+
+	</div>	  
+</header>
+<div class="conteneur-reponses separateur1"></div> <!-- séparateur -->
+<main class="contenu">
+<!-- <h1>🛡️ Feuille de Route Sécurité — Lundi 25.05.26</h1>  -->
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="accordion-title">🧱 1) Sécurités: Url, Edit/Delet, Sessions, Authentification(Hash), Script Ajax</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Empêcher l’accès direct par URL et le contournement du login.</h4>
+        <div class="task">
+            <input type="checkbox" id="t11">
+            <label for="t11">1.1 — backend/url_access_guard.php</label>
+			<div class="script">
+				<pre><code class="language-php">
+						session_start();
+						if (!isset($_SESSION['user_id'])) {
+							header("Location: login.php"); // ✔️index.php et non ❌login.php
+							exit();
+						}
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t12">
+            <label for="t12">1.2 — Protection backend (officiers non admin)</label>
+			<div class="script">
+				<pre><code class="language-php">
+				        // ✔️ modifier_.php &  ✔️ supprimer.php
+						
+						if ($_SESSION["user_role"] !== "admin") {
+							exit("Accès refusé.");
+						}
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t13">
+            <label for="t13">1.3 — backend/logout.php (détruire la session)</label>
+			<div class="script">
+				<pre><code class="language-php">
+						session_start();
+						session_unset();
+						session_destroy();
+						
+						header("Location: login.php"); // ✔️index.php
+						exit();
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t14">
+            <label for="t14">1.4 — Hachage des mots de passe</label>
+			<div class="script">
+				<pre><code class="language-php">
+				       $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+				
+				       //Et pour verifier
+				       password_verify($password, $hash);
+					   
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t15">
+            <label for="t15">1.5 — Empêcher l’accès direct aux scripts AJAX</label>
+			<div class="script">
+				<pre><code class="language-php">
+						//Dans tes scripts backend :
+
+						session_start();
+						if (!isset($_SESSION['user_id'])) {
+							http_response_code(403);
+							exit("Accès interdit");
+						}
+					   
+				</code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="accordion-title">🧱 2) Contrôle d’accès aux données</div>
+    <div class="accordion-content">
+
+        <h4>Objets:Gestion des droits (Rôles + Préfectures).</h4>
+	    <p>
+		   Un officier d'état civil ne peut accéder qu'aux documents de la préfecture où il est affecté.
+		   Seuls le préfet et l'agent "admin" peuvent accéder à toute la surface de données.
+        </p> 		
+
+        <div class="task">
+            <input type="checkbox" id="t21">
+            <label for="t21">2.1 — Ajouter un champ “préfecture” dans la table utilisateurs</label>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t22">
+            <label for="t22">2.2 — Stocker "rôle" + "préfecture" dans la session(lors du login)</label>
+            <div class="script">
+				<pre><code class="language-php">
+						session_start();
+						
+						$_SESSION['user_role']  = $row['roles'];
+						$_SESSION['prefecture'] = $row['prefecture'];
+						
+						// à mettre sur: backend/authentification.php
+						
+				</code></pre>
+			</div>
+		</div>
+
+        <div class="task">
+            <input type="checkbox" id="t23">
+            <label for="t23">2.3 — Filtrer les données selon la préfecture(lecture)⚠️</label>
+            <div class="script">
+				<pre><code class="language-php">
+						session_start();
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$pref = $_SESSION['prefecture'];
+							$sql = "SELECT * FROM table WHERE prefecture = '$pref'";
+						} else {
+							$sql = "SELECT * FROM table";
+						}
+						
+						à Repliquer dans:
+							✔️backend/colonne_afficher_naissance.php
+							✔️backend/lectureBD_afficherNaissance.php
+							✔️Le moteur de recherche
+						
+				</code></pre>
+			</div>
+		</div>
+
+        <div class="task">
+            <input type="checkbox" id="t24">
+            <label for="t24">2.4 — Filtrer les données selon la préfecture (écriture: Ajout)</label>
+            <div class="script">
+				<pre><code class="language-php">
+						// Un admin → peut ajouter/modifier n’importe où
+						// Un officier → ne peut ajouter/modifier que dans sa préfecture
+						
+						session_start();
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$_POST['prefecture'] = $_SESSION['prefecture'];
+						}
+						
+						Ensuite tu fais ton INSERT normalement.
+						
+						à Repliquer dans:
+							✔️backend/ecritureBD_insertionSQL.php
+				</code></pre>
+			</div>
+		</div>
+		
+		<div class="task">
+            <input type="checkbox" id="t25">
+            <label for="t25">2.5 — Filtrer les données selon la préfecture (écriture: Edit)</label>
+            <div class="script">
+				<pre><code class="language-php">
+						session_start();
+						
+						// Si ce n est pas un admin: On force la préfecture
+						if ($_SESSION['user_role'] !== 'admin') {
+							$_POST['prefecture'] = $_SESSION['prefecture'];
+						}
+						
+						// Ensuite : On l'impose dans la requête
+						$pref = $_POST['prefecture'];
+						$sql = "UPDATE naissance SET ... prefecture='$pref' WHERE id=$id";
+						
+						à Repliquer dans:
+							✔️backend/modifier_insertionSQL.php
+				</code></pre>
+			</div>
+		</div>
+		
+		
+
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="accordion-title">🧱 3) Applications: Accès en lecture</div>
+    <div class="accordion-content">
+
+        <h4>Objets:Gestion des droits (Rôles + Préfectures).</h4>
+
+        <div class="task">
+            <input type="checkbox" id="t31">
+            <label for="t31">3.1 — Accueil:backend/colonne_afficher_naissance.php</label>
+            <div class="script">
+				<pre><code class="language-php">
+						// $R=mysqli_query($conn, "SELECT * FROM  liste WHERE prefecture='".$p."' ") or exit(mysql_error($conn ));
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$prefUnique = $_SESSION['prefecture'];
+						    $R = mysqli_query($conn, "SELECT * FROM  liste WHERE prefecture='".$prefUnique."' ") or exit(mysql_error($conn ));
+						} else {
+							$R=mysqli_query($conn, "SELECT * FROM  liste WHERE prefecture='".$p."' ") or exit(mysql_error($conn ));
+						}
+				</code></pre>
+			</div>
+		</div>
+
+        <div class="task">
+            <input type="checkbox" id="t32">
+            <label for="t32">3.2 — Accueil:backend/colonne_imprimer_acte.php : ❌<span style="color:#ff8080;">Obsolète ← backend/colonne_afficher_naissance.php suffit</span>❌ </label>
+            <div class="script">
+				<pre><code class="language-php">
+						//$R=mysqli_query($conn , "SELECT * FROM  liste WHERE prefecture='".$_SESSION["v"]."' ") or exit(mysqli_error($conn ));
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$pref = $_SESSION['prefecture'];
+							$R=mysqli_query($conn , "SELECT * FROM  liste WHERE prefecture='".$pref."' ") or exit(mysqli_error($conn ));
+						} else {
+							$R=mysqli_query($conn , "SELECT * FROM  liste WHERE prefecture='".$_SESSION["v"]."' ") or exit(mysqli_error($conn ));
+						}
+						
+				</code></pre>
+			</div>
+		</div>
+
+        <div class="task">
+            <input type="checkbox" id="t33">
+            <label for="t33">3.3 — Accueil:backend/trier.php: ❌<span style="color:#ff8080;">Obsolète ← backend/colonne_afficher_naissance.php suffit</span>❌</label>
+            <div class="script">
+				<pre><code class="language-php">
+						// $R=mysqli_query($conn , "SELECT * FROM  liste WHERE prefecture='".$_SESSION["v"]."'  ORDER BY nom     ") or exit(mysql_error($conn ));
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$pref = $_SESSION['prefecture'];
+							$R=mysqli_query($conn , "SELECT * FROM  liste WHERE prefecture='".$pref."'  ORDER BY nom     ") or exit(mysql_error($conn ));
+						} else {
+							$R=mysqli_query($conn , "SELECT * FROM  liste WHERE prefecture='".$_SESSION["v"]."'  ORDER BY nom     ") or exit(mysql_error($conn ));
+						}
+				</code></pre>
+			</div>
+		</div>
+
+        <div class="task">
+            <input type="checkbox" id="t34">
+            <label for="t34">3.4 — LectureBD: backend/lectureBD_afficherNaissance.php</label>
+			<div class="script">
+				<pre><code class="language-php">
+						// $requete = $conn->prepare("SELECT * FROM liste WHERE prefecture = :pr");
+						// $requete->execute(['pr' => $pr]);
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$prefUnique = $_SESSION['prefecture'];
+							$requete = $conn->prepare("SELECT * FROM liste WHERE prefecture = :prefUnique");
+							$requete->execute(['prefUnique' => $prefUnique]);
+							// Message
+							if($pr !== $prefUnique){
+							    echo "Accès restreint à la préfecture de: <b>".$prefUnique."</b>";
+							    exit;
+							}
+						} else {
+							$requete = $conn->prepare("SELECT * FROM liste WHERE prefecture = :pr");
+							$requete->execute(['pr' => $pr]);
+						}
+				</code></pre>
+			</div>
+        </div>
+		
+    
+	
+			
+		<div class="task">
+            <input type="checkbox" id="t35">
+            <label for="t35">3.5 — LectureBD2: Search Engine</label>
+			<div class="script">
+				<pre><code class="language-php">
+						// backend/lectureBD2_searchPlayBack.ph(recherche par numéro)
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$prefUnique = $_SESSION['prefecture'];
+							$sql = "SELECT * FROM liste WHERE acte = :num AND prefecture = :prefUnique ";
+							$stmt = $conn->prepare($sql);
+							$stmt->execute([ 'num' => $num, 'prefUnique' => $prefUnique ]);
+							// Message
+							if($p !== $prefUnique){
+							    echo "Aucun document trouvé dans la préfecture de: <b>".$prefUnique."</b>";
+							    exit;
+							}
+						} else {
+							$sql = "SELECT * FROM liste WHERE acte = :num";
+							$stmt = $conn->prepare($sql);
+							$stmt->execute([ 'num' => $num ]);
+						}
+				</code></pre>
+			</div>
+
+		    <div class="script">
+				<pre><code class="language-php">
+						// backend/lectureBD2_searchPlayBackByName.ph(recherche par nom)
+						
+						if ($_SESSION['user_role'] !== 'admin') {
+							$prefUnique = $_SESSION['prefecture'];
+							$sql = "SELECT * FROM liste WHERE nom = :nom AND prefecture = :prefUnique ";
+							$stmt = $conn->prepare($sql);
+							$stmt->execute([ 'nom' => $nom, 'prefUnique' => $prefUnique ]);
+							// Message
+							if($p !== $prefUnique){
+							    echo "Aucun document trouvé dans la préfecture de: <b>".$prefUnique."</b>";
+							    exit;
+							}
+						} else {
+							$sql = "SELECT * FROM liste WHERE nom = :nom";
+							$stmt = $conn->prepare($sql);
+							$stmt->execute([ 'nom' => ltrim($nom) ]);
+						}
+				</code></pre>
+			</div>
+			<p>
+			  Bug: Si résultat negatif sur une prefecture. Et si  le document éxiste dans une autre prefecture => 🔒 Déconnexion bloquée
+			</p>
+        </div>
+
+    </div>
+</div>
+	
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="accordion-title">🧱 4) Applications: Accès en écriture</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Contrôl d'accès en écriture - contrôl de saisie sur le champs "Prefecture"</h4>
+
+        <div class="task">
+            <input type="checkbox" id="t41">
+            <label for="t41">4.1  ecritureBD.php: Contrôle de saisie sur le champs "Prefecture": Solution javaScript</label>
+		    <div class="script">
+				<pre><code class="language-JavaScript">
+						// 1️⃣ ecritureBD.php
+						
+						&lt;select
+							name="prefecture"
+							id="prefecture"
+							data-role="&lt?php echo $_SESSION['user_role']; ?>"
+							data-pref="&lt?php echo $_SESSION['prefecture']; ?>"
+							onChange="control(this); changement(this);">
+							
+						// 2️⃣  ecritureBD.js
+						
+						function control(select) {
+							let role = select.dataset.role;
+							let prefAutorisee = select.dataset.pref;
+							if (role !== "admin") {
+							    if (select.value !== prefAutorisee) {
+							       alert("La préfecture saisie est différente de votre centre d'affectation !");
+							       select.value = prefAutorisee;
+							    }
+							}
+						}
+				</code></pre>
+			</div>
+		</div>
+
+        <div class="task">
+            <input type="checkbox" id="t42">
+            <label for="t42">4.2 — ecritureB:backend/modifier_insertionSQL.php</label>
+            <div class="script">
+				<pre><code class="language-php">
+						//modifier.php
+						
+						/* 
+						 * Dès la page d'accueil
+						 * Le mode "Edit" est verouillé pour les non admin.
+						 * Donc, pas la peine de l'implémenter
+						 */
+						
+				</code></pre>
+			</div>
+		</div>
+    </div>
+</div>
+
+
+
+    <!--  PAGINATION  -->
+	<div class="tabcontent" id="tabcontent" style=" margin-top:3em; margin-bottom:0; " >
+		  <section class="containerPagination"  > 
+			<nav class="pagination"  >
+			  <a class="prev">&laquo;</a>
+			  <a href="#" class="btn popup activer default-btn">
+			      1
+				  <span class="popuptext">Sécurité procedurale !</span>
+			  </a>
+              <a   href="secusymfony.html"   class="btn popup-bottom">
+			       2
+				   <span class="popuptext">Sécurité symfony !</span>
+			  </a> 			  
+			  <a   href="layout.html"  class="btn popup">
+			      3
+				  <span class="popuptext">Logique layout !</span>
+			  </a>
+			  <a   href="debug.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Débug ⚠️</span>
+			  </a>
+			  <a   href="sql.html"  class="btn popup">
+			       5
+				   <span class="popuptext"> Sql</span>
+			  </a>
+			  <a class="next">&raquo;</a>
+			</nav>
+			<nav class="pagination pagination-blue">
+			  <a class="prev">&laquo;</a>
+			  <a    onclick="filterSelection('ibnAtiyya')" class="btn" >1</a>
+			  <a    onclick="filterSelection('ar-Râzî')"   class="btn" >2</a>
+			  <a    onclick="filterSelection('qurtubi')"   class="btn" >3</a>
+			  <a    onclick="filterSelection('baydawi')"   class="btn">4</a>
+			  <a    onclick="filterSelection('zawawi')"    class="btn" >5</a>
+			  <!-- <a    onclick="filterSelection('zawawi')"    class="btn activer" style="display:none;">5</a>  Pourquoi je fais ça? car class "activer" doit être intialement présent sur un bouton pour pour se propager sur les autres bouton suivant le clic utilisateur. Je met un "display:none" car je ne veux pas voir de btn enfoncé  tant que l'utilisateur ne l'a pas touché.( un peu long ce p'tit bavardage mé cpa grav)  -->
+			  <a id="btnNotes" class="next btn popup toggle-btn" onclick="toggleNotes();">
+					&raquo;
+					<span class="popuptext" id="myPopup">Notes de bas de page !</span>
+			  </a>
+			</nav>
+		  </section>
+	</div>		
+	<!--  fin PAGINATION  -->
+</main>
+
+<div id="notes" class="footer-notes"> <!--  Repliable (comme un panneau d’admin)    -->
+	<div class="conteneur-reponses"></div> <!-- séparateur -->
+	<footer style="height:auto; padding:0;" >     
+		<h3>
+		  Page après page, brique après brique, bloc par bloc.  
+		</h3>	
+		<div class="flexfooter">
+			<div>
+			   <h4>⭐ 1) Pourquoi tout reste vertical même sans align-items ?</h4>
+				Parce que tu confonds deux axes :
+			   <p>  
+				<b style="color:gold">✔ flex-direction</b>(Axe principal)<BR>
+				→ row = horizontal<BR>
+				→ column = vertical<BR>
+			   </p>
+			   <p>  
+				<b style="color:gold">✔ align-items</b>(axe secondaire)<BR> 
+				→ stretch = étire verticalement (si row)<BR>
+				→ stretch = étire horizontalement (si column)<BR>
+			   </p>
+				Donc :
+			   <P>
+				 👉 align-items ne décide PAS si les éléments sont en colonne ou en ligne.<BR>  
+				 👉 C’est flex-direction qui décide.
+			   </p>
+					Et toi, tu n’as PAS mis flex-direction: column. <BR>
+					 Donc Flexbox utilise sa valeur par défaut :<BR>
+			   <P>
+				   ✅ flex-direction: row (axe principal)<br>
+				   ✅ align-items: stretch  étire verticalement (l’axe secondaire)
+			   </p>
+			</div>
+			<div>
+			  <h4>⭐ 1) Question ?</h4>
+			  ⚠️Touches pas au margin-bottom de la paginition<br>
+			  ⚠️Il est normal c'est juste qu'il n'y a pas assez de section en haut<br>
+			  ⚠️Il suffit d'ajouter une 3em section<br><br>
+			  222222222   2222222222222222222
+			  222222222222222222222222222222222222
+			  <p>
+			  222222222222222222222222222222222222
+			  222222222222222   22222222222222
+			  222222222222222222222222222222222222
+			  </p>
+			  222222222222222222222222222222222222
+			  22222222    222222222222222222222
+			  222222222222222222222222222222222222
+			  222222222222222222222222222222222222
+			  <p>
+			  222222222222222222222222222222222222
+			  2222   222222222222222 22222222222
+			  222222222   2222222222222222222222
+			  222222222222222222222222222222222222
+			  222222222222222222222222222222222222
+			  </p>
+
+			</div>
+			<div>
+			   <h4>⭐ 1) Question ?</h4>
+			  Credo du pilote:"Page après page,
+			  brique après brique, bloc par bloc."
+			  hhhh<br>33333333333333333333333333
+			  333333333
+			  33333333333333333333333333333333333
+			  3333333333333
+			  <p>
+			  33333333333333333333333333333333333
+			  33333333333333333333333333333333333
+			  3333333333333333333  3333333333333
+			  33333333333333333333333333333333333
+			  333333333 333333333333333333333333
+			  33333333333333333333333333333333333
+			  </p>
+			  33333333333333333333333333333333333
+			  3333333333
+			</div>
+		</div>
+		
+		<div class="content-footer" style="margin-top:0;">         
+			<div class="ndreda-footer"> 		  
+				<ul type="square">
+					<li>Le client envoie des requêtes </li>
+					<li>Le serveur attend les requêtes des clients et y répond. </li>
+					
+				</ul>
+			</div>		
+			<span class="copyright_"><span style="color:gray;">2019 &copy; -</span> Master Handi</span>
+		</div>	  
+	</footer>
+</div>
+
+
+<script>
+    const PAGE_PREFIX = "procedurale_"; 
+</script>
+<script src="dependance/checklist.js"></script>
+
+
+</body>
+</html>

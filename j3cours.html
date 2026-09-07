@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Jour3</title><!-- Mardi 02.06.26  -->
+	<link rel="stylesheet" href="dependance/prism.css" media="screen" />
+    <link rel="stylesheet" href="dependance/dark.css" >
+    <link rel="stylesheet" href="dependance/pagination.css" >
+    <link rel="stylesheet" href="dependance/footer.css" ><!-- footer ndreda -->	
+	<link rel="stylesheet" href="dependance/flexfooter.css" >
+	
+	<script src="dependance/prism.js" type="text/javascript" ></script>
+	<script src="dependance/pagination.js" defer type="text/javascript" ></script>
+</head>
+
+<body>
+<header> 
+	
+	<div class="content-footer"> 
+         	
+		 <div class="ndreda-footer" style="padding:0;" >  
+			<!-- animation du footer -->
+			<div style="position: relative; top:0; right:auto; width:auto;">		
+				<div class="wrapper" style=" ">
+					<div class="obj"></div>
+					<div class="obj"></div>
+				</div>
+				
+			</div>	
+			<!-- contenu du footer -->
+			<div id="ndreda-footerG" style="width:100%;" >
+			    <h1>🛡️  Types avancés & fonctions typées  </h1>
+			</div>
+		</div>		
+		 <small class="copyright_"><span style="color:gray;">Jour3  -</span> <i style="color:#555">Cours</i></small> 
+		 <span class="marfa3 logo-emoji">🔷</span>
+	</div>	  
+</header>
+
+
+<div class="conteneur-reponses separateur1"></div> <!-- séparateur -->
+<main class="contenu">
+<!-- <h1>🛡️ Feuille de Route Sécurité — Lundi 25.05.26</h1>  -->
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="accordion-title">🧱 1) Les types utilitaires (Utility Types)</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Transformer des types existants </h4>
+        <div class="task">
+            <input type="checkbox" id="t11">
+            <label for="t11">1.1 — Partial&lt;T> Rend toutes les propriétés optionnelles.</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Exemple simple:
+					interface User { 
+					   name: string;
+					   age: number;
+					}
+					let u: Partial&lt;User> = {
+					   name: "Andjib" 
+					};
+					
+					//Exemple concret:
+					type UpdateOptions = Partial&lt;GestureOptions>;
+					
+					//Exemple3: 
+					*/
+					interface Settings{
+					   theme: string; 
+					   fontSize: number; 
+					}
+					let patch: Partial&lt;Settings> = {
+					   fontSize: 18
+					};
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t12">
+            <label for="t12">1.2 — Required&lt;T> : Rend toutes les propriétés obligatoires.</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Exemple simple:
+					interface Config {
+					  port?: number;
+					  debug?: boolean;
+					}
+					let c: Required&lt;Config> = {
+					  port: 3000,
+					  debug: true
+					};
+					
+					//Exemple2: 
+					interface Options {
+					  delay?: number;
+					  repeat?: number;
+					}
+					let strict: Required&lt;Options> = {
+					  delay: 100,
+					  repeat: 2
+					};
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t13">
+            <label for="t13">1.3 — Readonly&lt;T>: Empêche toute modification.</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Exemple simple:
+					interface Point {
+					  x: number;
+					  y: number;
+					}
+					const p: Readonly&lt;Point> = { x: 10, y: 20 };
+					// p.x = 30; ❌ Erreur
+					
+					//Exemple2: 
+					interface Position {
+					  x: number;
+					  y: number;
+					}
+					const pos: Readonly&lt;Position> = { x: 10, y: 20 };
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t14">
+            <label for="t14">1.4 — Pick&lt;T, K> : Garde uniquement certaines propriétés.</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Exemple simple:
+					interface User {
+					  name: string;
+					  age: number;
+					  email: string;
+					}
+					type UserPreview = Pick&lt;User, "name" | "email">;
+					
+					//Exemple2: 
+					interface User {
+					  name: string;
+					  age: number;
+					  email: string;
+					}
+					type UserNameEmail = Pick&lt;User, "name" | "email">;
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t15">
+            <label for="t15">1.5 — Omit&lt;T, K> : Retire certaines propriétés.</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Exemple simple:
+					type UserWithoutEmail = Omit&lt;User, "email">;
+					
+					//Exemple2:
+					type UserWithoutAge = Omit&lt;User, "age">;
+			    </code></pre>
+			</div>
+        </div>
+		
+		
+		<div class="task">
+            <input type="checkbox" id="t16">
+            <label for="t16">1.6 — Record&lt;K, T>: Crée un dictionnaire typé( K comme "Key", T comme "valeur Typée").</label>
+			<div class="script">
+				<pre><code class="language-ts">
+                    type Scores = Record<string, number>;
+					let s: Scores = {
+					  math: 18,
+					  physics: 17
+					};
+					👉 string = le type des clés  
+					👉 number = le type des valeurs
+					
+					//Exemple concret:
+					type GestureMap = Record&lt;string, Gesture>;
+					
+					//Exemple3: 
+					type GestureMap = Record&lt;string, Gesture>;
+					let map: GestureMap = {
+					  login: { type: "click", target: "#login", options: { button: "left" } }
+					};
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t17">
+            <label for="t17">1.7 — ReturnType&lt;T> : Récupère le type retourné par une fonction.</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// Exemple simple:
+					function createUser() {
+					  return { name: "Andjib", age: 30 };
+					}
+					type UserType = ReturnType&lt;typeof createUser>;
+					
+					//Exemple2: 
+					function buildGesture() {
+					  return { type: "hover", target: "#menu", options: { button: "left" } };
+					}
+					type BuiltGesture = ReturnType&lt;typeof buildGesture>;
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="accordion-title">🧱 2) Fonctions & Type génériques</div>
+    <div class="accordion-content">
+
+        <h4>Objets: function identity&lt; T >(value: T): T { ... }</h4>
+
+        <div class="task">
+            <input type="checkbox" id="t21">
+            <label for="t21">2.1 — Fonction générique — le concept de base</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// C'est une fonction qui accepte n’importe quel type, mais garde ce type intact.
+					function identity&lt;T>(value: T): T {
+					  return value;
+					}
+					identity&lt;string>("Hello");
+					identity&lt;number>(42);
+					identity&lt;boolean>(true);
+
+					👉 &lt;T> = le type
+					👉 value: T = paramètre typé
+					👉 : T = retour typé
+
+					//Exemple:
+
+					function identity&lt;T>(value: T): T {
+					  return value;
+					}
+					identity("Hello");
+					identity(123);
+					identity(true);
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t22">
+            <label for="t22">2.2 — On passe un tableau en argument</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					function first&lt;T>(arr: T[]): T {
+					  return arr[0];
+					}
+
+					first&lt;number>([10, 20, 30]);   // retourne 10
+					first&lt;string>(["a", "b"]);     // retourne "a"
+
+					//Exemple2:
+
+					function first&lt;T>(arr: T[]): T {
+					  return arr[0];
+					}
+					first([10, 20, 30]);
+					first(["a", "b"]);
+
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t23">
+            <label for="t23" id="j323">2.3 — Types génériques</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//Tu peux faire des types qui acceptent un paramètre :
+
+					type Box&lt;T> =  { value: T; } ;
+
+					let n: Box&lt;number> = { value: 10 };
+					let s: Box&lt;string> = { value: "Hello" };
+
+					//Exemple2
+					type Box&lt;T> = { value: T; };
+
+					let b1: Box&lt;number> = { value: 10 };
+					let b2: Box&lt;string> = { value: "TS" };
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t24">
+            <label for="t24">2.4 — Interfaces génériques</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//ApiResponse: Quand on attend une reponse: On précise le status( réçu ou pas)
+
+					//Exemple1: Couple Clé/valeur
+					interface ApiResponse&lt;T> {
+					  data: T;
+					  status: number;
+					}
+					let userResponse: ApiResponse&lt;{ name: string }> = {
+					  data: { name: "Andjib" },
+					  status: 200
+					};
+
+					//Exemple2: Une chaîne de caractères 
+					interface ApiResponse&lt;T> {
+					  data: T;
+					  status: number;
+					}
+					let r: ApiResponse&lt;string> = {
+					  data: "OK",
+					  status: 200
+					};
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t25">
+            <label for="t25">2.5 — Génériques avec contraintes (extends)</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//Tu peux limiter ce que T peut être : &lt; T extends contrainte >
+
+					function logLength&lt; T extends { length: number } >(item: T) {
+					  console.log(item.length);
+					}
+
+					logLength("Hello");
+					logLength([1, 2, 3]);
+
+					//→ T extends { length: number }  
+					//👉 T doit avoir une propriété length. 
+
+					//Exemple2
+					function logLength&lt; T extends { length: number }>(item: T) {
+					  console.log(item.length);
+					}
+					logLength("Hello");
+					logLength([1, 2, 3]);
+
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t26">
+            <label for="t26">2.6 — Génériques + options</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//repeat&lt;T>( argument typé, nombre de repetitions)
+					function repeat&lt;T>(value: T, times: number): T[] {
+					  return Array(times).fill(value);
+					}
+					repeat&lt;string>("Hi", 3);   // ["Hi", "Hi", "Hi"]
+					repeat&lt;number>(7, 2);      // [7, 7]
+
+					//Exemple2
+
+					function repeat&lt;T>(value: T, times: number): T[] {
+					  return Array(times).fill(value);
+					}
+					repeat("Hi", 3);
+					repeat(7, 2);
+					
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t27">
+            <label for="t27">2.7 — Génériques + Playwright vibe</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//Tu peux typer des actions :
+
+					interface Action&lt;T> {
+					  type: string;
+					  payload: T;
+					}
+					let clickAction: Action&lt;Gesture> = {
+					  type: "CLICK",
+					  payload: { type: "click", target: "#login", options: { button: "left" } }
+					};
+
+					//Exemple:
+
+					interface Action&lt;T> {
+					  type: string;
+					  payload: T;
+					}
+					let a: Action&lt;Gesture> = {
+					  type: "CLICK",
+					  payload: { type: "click", target: "#login", options: { button: "left" } }
+					};
+
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="accordion-title">🧱 3) Types paramétrés et Interfaces génériques avancés (Generic Interfaces & Types)</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Utiliser les Generic Interfaces( dans des types complexes, des objets, tableaux, et des fonctions) pour modeliser des réponses API et  des actions Playwright📌 </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t31">
+            <label for="t31">3.1 — Gris vert - Interface générique simple </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					interface Box&lt;T> {
+					  value: T;
+					}
+					let n: Box&lt;number> = { value: 10 };
+					let s: Box&lt;string> = { value: "Hello" };
+					//👉 T est un paramètre de type  
+					//👉 Tu peux mettre ce que tu veux dedans
+
+					//Exemple2
+					interface Box&lt;T> {
+					  value: T;
+					}
+					let b: Box&lt;number> = { value: 10 };
+
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t32">
+            <label for="t32">3.2 — Interface générique avec plusieurs paramètres ⚠️</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					interface Pair&lt;A, B> {
+					  first: A;
+					  second: B;
+					}
+					let p: Pair&lt;string, number> = {
+					  first: "Age",  
+					  second: 30
+					};
+					//👉 &lt;string, number> correspond à  <"Age", 30>
+					//👉 Tu peux combiner plusieurs types
+					//👉 Très utile pour les structures complexes
+
+					//Exemple2 ( 2 paramètres)
+					interface Pair&lt;A, B> {
+					  first: A;
+					  second: B;
+					}
+					let p: Pair&lt;string, number> = { first: "Age", second: 30 };
+
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t33">
+            <label for="t33">3.3 — Interface générique + contraintes: interface NOM&lt;T extends { CONTRAINTE }> {...}</label>
+
+			<div class="script">
+				<pre><code class="language-ts">
+					//Tu peux limiter ce que T peut être :
+					interface HasId&lt;T extends { id: number }> {
+					  item: T;
+					}
+					let user: HasId&lt;{ id: number; name: string }> = {
+					  item: { id: 1, name: "Andjib" }
+					};
+					//👉 T doit avoir un id: number
+
+					//Exemple2
+					interface HasId&lt;T extends { id: number }> {
+					  item: T;
+					}
+					let h: HasId&lt;{ id: number; name: string }> = {
+					  item: { id: 1, name: "TS" }
+					};
+
+			    </code></pre>
+			</div>
+        </div>
+		
+		
+		<div class="task">
+            <input type="checkbox" id="t34">
+            <label for="t34">3.4 — Interface générique + tableaux</label>
+			<div class="script">
+			<div class="script">
+				<pre><code class="language-ts">
+					interface List&lt;T> {
+					  items: T[];
+					}
+					let numbers: List&lt;number> = { items: [1, 2, 3] };
+					let names: List&lt;string> = { items: ["A", "B"] };
+
+					//Exemple
+
+					interface List&lt;T> {
+					  items: T[];
+					}
+					let l: List&lt;string> = { items: ["A", "B"] };
+
+			    </code></pre>
+			</div>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t35">
+            <label for="t35">3.5 — Interface générique + fonctions</label>
+			<div class="script">
+			<div class="script">
+				<pre><code class="language-ts">
+					//Tu peux typer une fonction dans une interface :
+					interface Transformer&lt;T> {
+					  transform(value: T): T;
+					}
+					let upper: Transformer&lt;string> = {
+					  transform(v) {
+						return v.toUpperCase();
+					  }
+					};
+
+					//Exemple2
+
+					interface Transformer&lt;T> {
+					  transform(value: T): T;
+					}
+					let t: Transformer&lt;string> = {
+					  transform(v) {
+						return v.toUpperCase();
+					  }
+					};
+
+			    </code></pre>
+			</div>
+			</div>
+        </div>
+
+		<div class="task">
+            <input type="checkbox" id="t36">
+            <label for="t36">3.6 — Interface générique + options (Playwright vibe)</label>
+			<div class="script">
+			<div class="script">
+				<pre><code class="language-ts">
+					interface Action&lt;TPayload> {
+					  type: string;
+					  payload: TPayload;
+					}
+					let clickAction: Action&lt;Gesture> = {
+					  type: "CLICK",
+					  payload: {
+						type: "click",
+						target: "#login",
+						options: { button: "left" }
+					  }
+					};
+					//👉 Tu peux typer le payload avec n’importe quoi
+					//👉 Très utile pour les actions UI, API, tests
+
+					//Exemple2 :  Interface générique + Gesture(Playwright vibe)🔹
+
+					interface Action&lt;T> {
+					  type: string;
+					  payload: T;
+					}
+					let a: Action&lt;Gesture> = {
+					  type: "CLICK",
+					  payload: { type: "click", target: "#login", options: { button: "left" } }
+					};
+
+			    </code></pre>
+			</div>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t37">
+            <label for="t37">3.7 — Interface générique + API (cas réel)</label>
+			<div class="script">
+			<div class="script">
+				<pre><code class="language-ts">
+					interface ApiResponse&lt;T> {
+					  data: T;
+					  status: number;
+					  error?: string;
+					}
+					let userResponse: ApiResponse&lt;{ name: string; age: number }> = {
+					  data: { name: "Andjib", age: 30 },
+					  status: 200
+					};
+
+					//Exemple
+					interface ApiResponse&lt;T> {
+					  data: T;
+					  status: number;
+					}
+
+					let r: ApiResponse&lt;{ name: string }> = {
+					  data: { name: "Andjib" },
+					  status: 200
+					};
+
+			    </code></pre>
+			</div>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t38">
+            <label for="t38">3.8 — Interface générique + Utility Types (combo maestro)</label>
+			<div class="script">
+			<div class="script">
+				<pre><code class="language-ts">
+					interface Patch&lt;T> {
+					  update: PartialT&lt;>;
+					}
+					let patchUser: Patch&lt;{ name: string; age: number }> = {
+					  update: { age: 31 }
+					};
+					//👉 Tu combines génériques + Partial
+					//👉 Tu construit donc une structure de mise à jour propre
+
+					//Exemple2 : Interface générique + Partial 🔹
+
+					interface Patch&lt;{T> {
+					  update: Partial&lt;{T>;
+					}
+					let p2: Patch&lt;{{ name: string; age: number }> = {
+					  update: { age: 31 }
+					};
+
+			    </code></pre>
+			</div>
+			</div>
+        </div>
+		
+	</div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="accordion-title">🧱 4) Les fonctions typées avancées</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Ça prépare directement à Playwright📌(car Playwright utilise énormément de types complexes). </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t41">
+            <label for="t41">4.1 — Signature de fonction (Call Signature) </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//Une interface peut décrire une fonction.
+					interface Add {
+					  (a: number, b: number): number;
+					}
+					const sum: Add = (x, y) => x + y;
+					//👉 Tu définis le type de la fonction, pas un objet.
+					//👉 Très utile pour typer des callbacks.
+
+
+					//Exemple2
+					interface Multiply {
+					  (a: number, b: number): number;
+					}
+					const mul: Multiply = (x, y) => x * y;
+
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t42">
+            <label for="t42">4.2 — Fonctions qui retournent des objets typés</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					interface User {
+					  name: string;
+					  age: number;
+					}
+					function createUser(name: string, age: number): User {
+					  return { name, age };
+					}
+					//👉 Le retour est typé
+					//👉 Tu garantis la forme de l’objet
+
+					//Exemple2
+					interface Point {
+					  x: number;
+					  y: number;
+					}
+					function createPoint(x: number, y: number): Point {
+					  return { x, y };
+					}
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t43">
+            <label for="t43">4.3 — Fonctions génériques (niveau avancé)</label>
+
+			<div class="script">
+				<pre><code class="language-ts">
+					//Sortie: Une valeur de même type que le paramètre entré
+					function wrap&lt;T>(value: T): { item: T } {
+					  return { item: value };
+					}
+					wrap("Hello");   // { item: "Hello" }
+					wrap(42);        // { item: 42 }
+					//👉 Le type du retour dépend du type du paramètre
+					//👉 Ultra puissant
+
+					//Exemple2
+					function wrap&lt;T>(value: T): { item: T } {
+					  return { item: value };
+					}
+					wrap("TS");
+					wrap(99);
+			    </code></pre>
+			</div>
+        </div>
+		
+		
+		<div class="task">
+            <input type="checkbox" id="t44">
+            <label for="t44">4.4 — Fonctions génériques + contraintes</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//function blabla&lt;TypeEntré extends contrainte>(paramètre): TypeRetour
+					function withId&lt;T extends { id: number }>(obj: T): T {
+					  console.log("ID:", obj.id);
+					  return obj;
+					}
+					withId({ id: 1, name: "Andjib" });
+					//👉 T doit avoir un id  
+					//👉 Tu sécurises ton code
+
+					//Exemple2
+					function logId&lt;T extends { id: number }>(obj: T): void {
+					  console.log(obj.id);
+					}
+					logId({ id: 10, name: "Test" });
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t45">
+            <label for="t45">4.5 — Fonctions avec options typées</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					interface GestureOptions {
+					  button: "left" | "right" | "middle";
+					  delay?: number;
+					  repeat?: number;
+					}
+					function executeGesture(target: string, options: GestureOptions) {
+					  console.log(`Geste sur ${target} avec bouton ${options.button}`);
+					}
+					//👉 Tu garantis que les options sont correctes
+					//👉 Tu évites les erreurs runtime
+
+					//Exemple2
+					interface Options {
+					  delay?: number;
+					  repeat?: number;
+					}
+					function run(action: string, opts: Options) {
+					  console.log(action, opts.delay, opts.repeat);
+					}
+			    </code></pre>
+			</div>
+        </div>
+
+		<div class="task">
+            <input type="checkbox" id="t46">
+            <label for="t46">4.6 — Fonctions qui retournent des types génériques</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					function makeList&lt;T>(...items: T[]): T[] {
+					  return items;
+					}
+					makeList(1, 2, 3);         // number[]
+					makeList("a", "b");        // string[]
+
+					//Exemple2:  Fonction générique qui retourne un tableau🔹
+					function toArray&lt;T>(value: T): T[] {
+					  return [value];
+					}
+					toArray("Hello");
+					toArray(123);
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t47">
+            <label for="t47">4.7 — Fonctions typées + Playwright vibe📌</label>
+			<div class="script">
+									<pre><code class="language-ts">
+					⚠️Problème( voir maestro): la 3ème valeur de retour(options), n'est pas dans les paramètres d'entrée ?????
+					function buildGesture(type: GestureType, target: string): Gesture {
+					  return {
+						type,
+						target,
+						options: { button: "left" }
+					  };
+					}
+					const g = buildGesture("click", "#login");
+					//👉 Tu construis un Gesture typé
+					//👉 Tu garantis la structure
+
+					//Exemple2: Fonction typée + Gesture🔹 
+					function buildGesture(type: GestureType, target: string): Gesture {
+					  return {
+						type,
+						target,
+						options: { button: "left" }
+					  };
+					}
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t48">
+            <label for="t48">4.8 — Fonctions typées + Utility Types</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//Cas de "Partial" : utility type  N°1 👉( voir 1.1) - 👉( voir aussi la structure de Gesture Jour2/?.?)
+					function patchGesture(update: Partial&lt;Gesture>): Partial<Gesture> {
+					  return update;
+					}
+					patchGesture({ target: "#menu" }); // On prend donc, juste une seule option de l'interface Gesture
+					//👉 Tu acceptes des mises à jour partielles
+					//👉 Tu retournes un type partiel
+
+
+					Exemple2:  Fonction + Partial 🔹
+					function updateGesture(update: Partial&lt;Gesture>) {
+					  return update;
+					}
+					updateGesture({ delay: 100 }); // Une autre option de l'interface Gesture
+			    </code></pre>
+			</div>
+        </div>
+		
+	</div>
+</div>
+
+<h2 style="text-align:center; color:#aaa;">Bonus: Les types conditionnels (TS Conditional Types) </h2>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="accordion-title">🧱 5) Les types conditionnels: T extends U ? X : Y</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Comprendre la syntaxe conventionnelle pour traduire “si T est X alors Y sinon Z”. </h4>
+        <div class="task">
+            <input type="checkbox" id="t51">
+            <label for="t51">5.1 — 11111111111  </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// 1111111111111111111 
+					// ... 
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t52">
+            <label for="t52">5.2 - 222222222222222</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//  2222222222
+					//  ...
+                    
+
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+    <!--  PAGINATION  -->
+	<div class="tabcontent" id="tabcontent" style=" margin-top:3em; margin-bottom:0; " >
+		  <section class="containerPagination"  > 
+			<nav class="pagination"  >
+			  <a class="prev">&laquo;</a>
+			  <a   href="index.html"  class="btn popup">
+			      1
+				  <span class="popuptext">Sécurité procedurale !</span>
+			  </a>
+			  <a   href="secusymfony.html"   class="btn popup-bottom">
+			       2
+				   <span class="popuptext">Sécurité symfony !</span>
+			  </a> 
+			  <a   href="#"  class="btn popup activer default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j4cours.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j5cours.html"  class="btn popup">
+			       5
+				   <span class="popuptext">Tests paramétrés<br> Cours... </span>
+			  </a>
+			  <a   href="j6cours.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">6666666666666<br> Cours... </span>
+			  </a>
+			  <a   href="j7cours.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777777<br> Cours... </span>
+			  </a>
+			  <a class="next">&raquo;</a>
+			</nav>
+			<nav class="pagination pagination-blue">
+			  <a class="prev">&laquo;</a>
+			  <a    onclick="filterSelection('ibnAtiyya')" class="btn" >1</a>
+			  <a    onclick="filterSelection('ar-Râzî')"   class="btn" >2</a>
+			  <a   href="j3exos.html"  class="btn popup  default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Exercices... </span>
+			  </a>
+			  <a   href="j4exos.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancées<br> Exercices... </span>
+			  </a>
+			  <a   href="j5exos.html"  class="btn popup">
+			       5
+				   <span class="popuptext">Type avancé<br> Exercices... </span>
+			  </a>
+			  <a   href="j6exos.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">666666666666<br> Exercices... </span>
+			  </a>
+			  <a   href="j7exos.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777<br> Exercices... </span>
+			  </a>
+			  <!-- <a    onclick="filterSelection('zawawi')"    class="btn activer" style="display:none;">5</a>  Pourquoi je fais ça? car class "activer" doit être intialement présent sur un bouton pour pour se propager sur les autres bouton suivant le clic utilisateur. Je met un "display:none" car je ne veux pas voir de btn enfoncé  tant que l'utilisateur ne l'a pas touché.( un peu long ce p'tit bavardage mé cpa grav)  -->
+			  <a id="btnNotes" class="next btn popup toggle-btn" onclick="toggleNotes();">
+					&raquo;
+					<span class="popuptext" id="myPopup">Notes de bas de page !</span>
+			  </a>
+			</nav>
+		  </section> 
+	</div>		
+	<!--  fin PAGINATION  -->
+</main>
+
+
+<div id="notes" class="footer-notes"> <!--  Repliable (comme un panneau d’admin)    -->
+	<div class="conteneur-reponses"></div> <!-- séparateur -->
+	<footer style="height:auto; padding:0;" >     
+		<h3>
+		  Objectif: Inventer des types (puissants, réutilisables, propres)  
+		</h3>	
+		<div class="flexfooter">
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">1. Les types utilitaires:</h4>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Partial&lt;T></li>
+				      <li> ✔ Required&lt;T></li>
+				      <li> ✔ Readonly&lt;T></li>
+				      <li> ✔ Pick&lt;T></li>
+				      <li> ✔ Omit<&lt;T></li>
+				      <li> ✔ Record&lt;T></li>
+				      <li> ✔ ReturnType&lt;T></li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     permettent de tranceformer des types existants.<br>
+					 👉 Ce sont les “super‑pouvoirs” de TypeScript.
+				   </p>
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">2. Les génériques</h4>
+				   <b>function identity&lt;T>(value: T): T { ... }</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ ça permet d'inventer des types flexibles</li>
+				      <li> ✔ ça évite les répétitions </li>
+				      <li> ✔ ça améliore la sécurité du code</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     C'est pour de tranceformer des types existants.<br>
+					 👉C’est le cœur du TypeScript moderne.
+				   </p>
+				   
+
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">3. Generic Interfaces & Types</h4>
+				   <b>On parle d'Interfaces génériques avancées et de types paramétrés </b>
+				   <p style="padding-bottom:0; margin-bottom:0;">
+				      Comment écrire : 
+				   </p>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> interface ApiResponse&lt;T> {</li>
+				      <li> &emsp;data: T; </li>
+				      <li> &emsp;status: number;</li>
+				      <li> }</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+					Et comment les utiliser avec :<br>
+					  &emsp;→  Des types complexes, des objets, <br>
+					  &emsp;→  des tableaux, des fonctions<br>
+					👉 C’est ce qui permet de modéliser des réponses API, des actions Playwright📌, etc. 
+				   </p>
+				   
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">4. Fonctions typées avancées</h4>
+				   <b>Il y en a 3 fonctions typées:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Les fonctions génériques,</li>
+				      <li> ✔ celles retournant des types complexes </li>
+				      <li> ✔ celles qui manipulent des objets typés</li>
+				      <li> ✔ et les signatures de fonction </li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉 Ça te prépare directement à Playwright, <br>
+					  car Playwright utilise énormément de types complexes.
+				   </p>
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">5. Les types conditionnels</h4>
+				   <b>C’est le niveau “maestro”:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li></li>
+				      <li>  T extends U ? X : Y </li>
+				      <li> </li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉C’est ce qui permet à TypeScript d’être intelligent.
+				   </p>
+				  
+				 
+			
+				  </p>
+
+			</div>
+		</div>
+		
+		<div class="content-footer" style="margin-top:0;">         
+			<div class="ndreda-footer"> 		  
+				<ul type="square">
+				    <li>Generic symbol:  &lt; ... ></li> 
+					<li>Generic Types : Types paramétrés</li>
+					<li>Generic Interfaces: Interfaces génériques</li>
+					<li>Call signatures: Signatures de fonction </li>
+				</ul>
+			</div>		
+			<span class="copyright_"><span style="color:gray;">2019 &copy; -</span> Master Handi</span>
+		</div>	  
+	</footer>
+</div>
+
+<script>
+    const PAGE_PREFIX = "layout_"; 
+</script>
+<script src="dependance/checklist.js"></script>
+<!-- Redirection:K.O
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const hash = window.location.hash;
+
+    if (hash) {
+        const target = document.querySelector(hash);
+
+        if (target) {
+            setTimeout(() => {
+                document.documentElement.scrollTo({
+                    top: target.offsetTop,
+                    behavior: "smooth"
+                });
+            }, 50);
+        }
+    }
+});
+</script>
+-->
+
+
+
+
+</body>
+</html>

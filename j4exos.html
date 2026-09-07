@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Jour4/Exos</title><!-- Mardi 02.06.26  -->
+	<link rel="stylesheet" href="dependance/prism.css" media="screen" />
+    <link rel="stylesheet" href="dependance/dark.css" >
+    <link rel="stylesheet" href="dependance/pagination.css" >
+    <link rel="stylesheet" href="dependance/footer.css" ><!-- footer ndreda -->	
+	<link rel="stylesheet" href="dependance/flexfooter.css" >
+	
+	<script src="dependance/prism.js" type="text/javascript" ></script>
+	<script src="dependance/pagination.js" defer type="text/javascript" ></script>
+</head>
+
+<body>
+<header> 
+	
+	<div class="content-footer"> 
+         	
+		 <div class="ndreda-footer" style="padding:0;" >  
+			<!-- animation du footer -->
+			<div style="position: relative; top:0; right:auto; width:auto;">		
+				<div class="wrapper" style=" ">
+					<div class="obj"></div>
+					<div class="obj"></div>
+				</div>
+				
+			</div>	
+			<!-- contenu du footer -->
+			<div id="ndreda-footerG" style="width:100%;" >
+			    <h1>🛡️  Modélisation avancée + Page Object + Fixture + Test  </h1>
+			</div>
+		</div>		
+		 <small class="copyright_"><span style="color:gray;">Jour4  -</span> <i style="color:#555">Exercices</i></small> 
+		 <span class="marfa3 logo-emoji">🔷</span>
+	</div>	  
+</header>
+
+
+<div class="conteneur-reponses separateur1"></div> <!-- séparateur -->
+<main class="contenu">
+<!-- <h1>🛡️ Feuille de Route Sécurité — Lundi 25.05.26</h1>  -->
+
+<!-- SECTION 0 -->
+<div class="section">
+    <div class="accordion-title">🧱 Programme</div>
+    <div class="accordion-content">
+
+        <h4>Objet: Passer du niveau “j’utilise Playwright” au niveau “je structure Playwright” </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t100">
+            <label for="t100">Tu vas constuire ton premier test</label>
+			<div class="script">
+				<pre><code class="language-java">
+					// Une interface, un objet Page, une fixture
+					
+					✔ Une interface pour modéliser une page de Login
+					✔ Un Page Object typé
+					✔ Une fixture Playwright qui injecte ce Page Object
+
+					=> Un test complet qui utilise tout ça
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q1: Interface de modélisation</div>
+    <div class="accordion-content">
+
+        <h4>Objets: Définir la structure de ta page Login(input,button,message). </h4>
+        <div class="task">
+            <input type="checkbox" id="t11">
+            <label for="t11">Enoncé  </label>
+			<div class="script">
+				<pre><code class="language-java">
+					Définis une interface LoginPageModel, modèle typé de ta page . 
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t12">
+            <label for="t12">Solution <a href="j?cours.html#j???" target="_blank" style="text-decoration:none !important; color:inherit;">👉 Cf. Jour?/Cours/?.?</a></label>
+			<div class="script">
+				<pre><code class="language-ts">
+					interface LoginPageModel {
+					    inputs: {
+					        email: string;
+					        password: string;
+					    };
+					    buttons: {
+						    submit: string;
+					    };
+					    messages: {
+						    error: string;
+					    };
+					}
+					➡️ Tu viens de faire un modèle typé de ta page: C’est ton “plan architectural”.
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exeo1/Q2: Page Object typé </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Implémente une classe qui utilise le modèle LoginPageModel </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t21">
+            <label for="t21">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-java">
+					Dans une classe LoginPageModel, instancier un objet model, qui va faire les actions suivantes(sur la page https://site.com/login ):   
+					1. Saisir l'email 
+					2. Le password
+					3. Valider 
+					4. Gerer les message d'erreurs 
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t22">
+            <label for="t22">Solution 👉 Cf. Jour?/Cours/?.?</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { Page } from "@playwright/test";
+					class LoginPage {
+					   constructor(private page: Page) {}
+					   model: LoginPageModel = {
+					       inputs: { email: "#email", password: "#password" },
+					       buttons:{ submit: "#submit" },
+					       messages: { error: ".error" }
+					   };
+					   async goto() { await this.page.goto("https://site.com/login"); }
+					   
+					   get email()  { return this.page.locator(this.model.inputs.email); }
+					   get password() { return this.page.locator(this.model.inputs.password); }
+					   get submit() { return this.page.locator(this.model.buttons.submit); }
+					   get errorMessage() { return this.page.locator(this.model.messages.error); }
+					}
+					➡️ Tu as un Page Object propre, typé, structuré.
+					➡️ Tu utilises ton modèle pour éviter les strings partout.
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q3: Fixture avancée (🌱 Bloc pattern) </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Une fixture qui injecte le Page Object ( loginPage de type LoginPage) </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t31">
+            <label for="t31">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-java">
+					3.1 Etendre le test Playwright pour injecter ton Page Object.  
+					3.2 Définir l'interface: Elle porte le nom de la fixture
+					3.3 Instancier l'interface: const test = base.extend&lt;nomFixture>(...);  
+					3.4 Mettre le test à disposition   
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t32">
+            <label for="t32">Solution 👉 Cf. Jour4/Cours/5</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { test as base } from "@playwright/test"; // @playwright/test = un package npm appartenant au “scope” playwright.
+					interface MyFixtures {
+					  loginPage: LoginPage;
+					}
+					const test = base.extend&lt;MyFixtures>({  loginPage: async( { page }, use )   =>   {const lp = new LoginPage(page); await use(lp); }      });
+					export { test };
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q4: Dataset( Jeu de données typées) </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Une liste d'utilisateurs contenant leurs email,password, et rôles </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t41">
+            <label for="t41">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-java">
+					4.1 Définir une interface avec les paramètres de chaque utilisateur
+					&nbsp;  &bull; On doit connaître l'adresse mail, le mot de passe, et le rôle de chaque utilisateur
+					&nbsp;  &bull; Un utilisateur peut être admin, utilisateur ordinaire, ou invité
+					4.2 Définir un dictionnaire typé(relatif à cet interface) pour mettre la liste des utilisateurs
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t42">
+            <label for="t42">Solution 👉 Cf.  Jour4/Cours/1.3</label>
+			<div class="script">
+			<pre><code class="language-ts">
+				interface TestUser {
+				  email: string;
+				  password: string;
+				  role: "admin" | "user" | "guest";
+				}
+
+				const users: Record&lt;string, TestUser> = {
+				  admin: {
+					email: "admin@test.com",
+					password: "123456",
+					role: "admin"
+				  },
+				  user: {
+					email: "user@test.com",
+					password: "123456",
+					role: "user"
+				  }
+				};
+				➡️ users = ton jeu de données (dataset). Dictionnaire des utilisateurs(typé   TestUser)
+				➡️ Rien à voir avec Playwright : c’est toi qui le définis.
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exo1/Q5: Test complet </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Utiliser tout ce qu'on a construit ci-haut pour construire un test </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t51">
+            <label for="t51">Enoncé</label>
+			<div class="script">
+				<pre><code class="language-java">
+					Tu utilises :
+						✔️ ton Page Object: LoginPage(Bloc3)
+						✔️ ta fixture: loginPage(Bloc3)
+						✔️ ton dataset: users(Bloc4)
+						✔️ ton modèle typé: TestUser(Bloc4)
+					C’est l'architecture utilisée en entreprise.
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t52">
+            <label for="t52">Solution 👉 Cf. Jour4/Exercice/Bloc3 et 4</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { test, expect } from "./fixtures";
+					import { users } from "./data/users";
+
+					test("admin can login", async ({ loginPage }) => {
+					  const admin = users.admin;
+
+					  await loginPage.goto();
+					  await loginPage.email.fill(admin.email);
+					  await loginPage.password.fill(admin.password);
+					  await loginPage.submit.click();
+
+					  await expect(loginPage.errorMessage).toBeHidden();
+					});
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="accordion-title">🧱 Exeo1/Q6: Résumé factory style </div>
+    <div class="accordion-content">
+
+        <h4>Objets: La procedure(les étapes) de construction d'un test </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t61">
+            <label for="t61">Résumé: </label>
+			<div class="script">
+				<pre><code class="language-java">
+					 ✔️ Interface → structure typée de la page
+					 ✔️ Page Object → encapsule les actions + locators
+					 ✔️ Fixture → injecte le Page Object dans les tests
+					 ✔️ Dataset → jeu de données typé pour les utilisateurs
+					 ✔️ Test → utilise tout ça proprement, sans duplication
+
+					  Conclusion:
+					  On vient de poser les fondations d’un framework Playwright. 
+			    </code></pre>
+			</div>
+        </div>
+ 
+    </div>
+</div>
+
+    <!--  PAGINATION  -->
+	<div class="tabcontent" id="tabcontent" style=" margin-top:3em; margin-bottom:0; " >
+		  <section class="containerPagination"  > 
+			<nav class="pagination"  >
+			  <a class="prev">&laquo;</a>
+			  <a   href="index.html"  class="btn popup">
+			      1
+				  <span class="popuptext">Sécurité procedurale !</span>
+			  </a>
+			  <a   href="secusymfony.html"   class="btn popup-bottom">
+			       2
+				   <span class="popuptext">Sécurité symfony !</span>
+			  </a> 
+			  <a   href="j3cours.html"  class="btn popup  default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j4cours.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j5cours.html"  class="btn popup">
+			       5
+				   <span class="popuptext"> ////////</span>
+			  </a>
+			  <a   href="j6cours.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">6666666666666<br> Cours... </span>
+			  </a>
+			  <a   href="j7cours.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777777<br> Cours... </span>
+			  </a>
+			  <a class="next">&raquo;</a>
+			</nav>
+			<nav class="pagination pagination-blue">
+			  <a class="prev">&laquo;</a>
+			  <a    onclick="filterSelection('ibnAtiyya')" class="btn" >1</a>
+			  <a    onclick="filterSelection('ar-Râzî')"   class="btn" >2</a>
+			  <a   href="#"  class="btn popup   default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Exercices... </span>
+			  </a>
+			  <a   href="#"   class="btn popup-bottom activer">
+			       4
+				   <span class="popuptext">Modélisations avancés<br> Exercices... </span>
+			  </a>
+			  <a   href="j5exos.html"  class="btn popup">
+			       5
+				   <span class="popuptext">Type avancé<br> Exercices... </span>
+			  </a>
+			  <a   href="j6exos.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">666666666666<br> Exercices... </span>
+			  </a>
+			  <a   href="j7exos.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777<br> Exercices... </span>
+			  </a>
+			  <a id="btnNotes" class="next btn popup toggle-btn" onclick="toggleNotes();">
+					&raquo;
+					<span class="popuptext" id="myPopup">Notes de bas de page !</span>
+			  </a>
+			</nav>
+		  </section> 
+	</div>		
+	<!--  fin PAGINATION  -->
+</main>
+
+
+<div id="notes" class="footer-notes"> <!--  Repliable (comme un panneau d’admin)    -->
+	<div class="conteneur-reponses"></div> <!-- séparateur -->
+	<footer style="height:auto; padding:0;" >     
+		<h3>
+		  Objectif: Un test complet utilisant une interface, un objet page, et une fixture 
+		</h3>	
+		<div class="flexfooter">
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">1. Interface de modélisation:</h4>
+				   <p style="padding-top:0; margin-top:0;">
+				     C'est le modèle typé d'une page.<br>
+					 👉 On y met les paramètre à tester<br>
+					      &emsp;&emsp; - champs input,<br> 
+						  &emsp;&emsp; -  button, <br>
+						  &emsp;&emsp; - message<br>
+					 ...etc)
+				   </p>
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">2. Page Object typé</h4>
+				   <b>On implémente une classe qui utilise ce modèle. Dans cette classe:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ On défini un objet d'instance du model</li>
+				      <li> ✔ On annonce les action avec async </li>
+				      <li> ✔ Et on lance les action avec l'objet d'instance</li>
+				   </ul>
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">3. Fixture  qui injecte ce Page Object</h4>
+				   <b>La fixture se construit en 4 étapes </b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> <b>3.1 Etendre le test:</b><br> Pour injecter ton Page Object</li>
+				      <li> <b>3.2 Définir l'interface:</b><br>Elle porte le nom de la fixture </li>
+				      <li> <b>3.3 Instancier l'interface:</b><br> const test = base.extend&lt;nomFixture>(...); </li>
+				      <li> <b>3.4 export { test };</b></li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+					➡️ L'action définie dans l'interface(ici loginPage) devient disponible dans tous tes tests <br>
+					➡️ Plus besoin de créer la page à la main. 
+				   </p>
+				   
+				   	<p style="padding-top:0; margin-top:0;">
+					<b style="font-size:1.1em;">Rappel :</b><br>
+					  &bull;  <b>Page</b> = Type Playwight <br>C'est un Objet(avec des centaines de mthd) pour manipuler le navigateur Cf Jour2/Cours/4 <br>
+					  &bull;  <b>{ page }</b> = ???<br>
+					  &bull;  <b>use</b> = ???<br>
+					  &bull;  <b>async()</b> = Annoce des actions qui vont durer<br> Cf Jour2/Cours/5<br>
+					  &bull;  <b>async( { page }, use )</b> =  ???<br>
+				   </p>
+				   
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">4. ////////////////////</h4>
+				   <b>Il y en a 3 fonctions typées:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Les fonctions génériques,</li>
+				      <li> ✔ les fonctions qui retournent des types complexes </li>
+				      <li> ✔ les fonctions qui manipulent des objets typés</li>
+				      <li> ✔ et les signatures de fonction</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉 Ça te prépare directement à Playwright, <br>
+					  car Playwright utilise énormément de types complexes.
+				   </p>
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">5. ////////////////////</h4>
+				   <b>C’est le niveau “maestro”:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li></li>
+				      <li>  T extends U ? X : Y </li>
+				      <li> </li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉C’est ce qui permet à TypeScript d’être intelligent.
+				   </p>
+				  
+				 
+			
+				  </p>
+
+			</div>
+		</div>
+		
+		<div class="content-footer" style="margin-top:0;">         
+			<div class="ndreda-footer"> 		  
+				<ul type="square">
+					<li>Generic Types : Types paramétrés</li>
+					<li>Generic Interfaces: Interfaces génériques</li>
+					<li>Call signatures: Signatures de fonction </li>
+				</ul>
+			</div>		
+			<span class="copyright_"><span style="color:gray;">2019 &copy; -</span> Master Handi</span>
+		</div>	  
+	</footer>
+</div>
+
+<script>
+    const PAGE_PREFIX = "layout_"; 
+</script>
+<script src="dependance/checklist.js"></script>
+
+</body>
+</html>
