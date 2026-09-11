@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Jour6</title><!-- Mardi 02.06.26  -->
+	<link rel="stylesheet" href="dependance/prism.css" media="screen" />
+    <link rel="stylesheet" href="dependance/dark.css" >
+    <link rel="stylesheet" href="dependance/pagination.css" >
+    <link rel="stylesheet" href="dependance/footer.css" ><!-- footer ndreda -->	
+	<link rel="stylesheet" href="dependance/flexfooter.css" >
+	
+	<script src="dependance/prism.js" type="text/javascript" ></script>
+	<script src="dependance/pagination.js" defer type="text/javascript" ></script>
+</head>
+
+<body>
+<header> 
+	
+	<div class="content-footer"> 
+         	
+		 <div class="ndreda-footer" style="padding:0;" >  
+			<!-- animation du footer -->
+			<div style="position: relative; top:0; right:auto; width:auto;">		
+				<div class="wrapper" style=" ">
+					<div class="obj"></div>
+					<div class="obj"></div>
+				</div>
+				
+			</div>	
+			<!-- contenu du footer -->
+			<div id="ndreda-footerG" style="width:100%;" >
+			    <h1>🛡️ Mini-projet playwright: Structure de base    </h1>
+			</div>
+		</div>		
+		 <small class="copyright_"><span style="color:gray;">Jour6  -</span> <i style="color:#555">Exercices</i></small> 
+		 <span class="marfa3 logo-emoji">🔷</span>
+	</div>	  
+</header>
+
+
+<div class="conteneur-reponses separateur1"></div> <!-- séparateur -->
+<main class="contenu">
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="accordion-title">🧱 1. Synthèse des commandes </div>
+    <div class="accordion-content">
+
+        <h4>Objets: Initialiser le projet Node, Installer Playwright, Installer les navigateurs Playwright </h4>
+        <div class="task">
+            <input type="checkbox" id="t11">
+            <label for="t11">Enoncé  </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					Dans le dossier playwright-project : 
+					    1. Initialiser le projet Node
+					    2. Installer Playwright
+						3. Installer les navigateurs Playwright
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t12">
+            <label for="t12">Solution <!-- <a href="j?cours.html#j???" target="_blank" style="text-decoration:none !important; color:inherit;">👉 Cf. Jour?/Cours/?.?</a> --></label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// mkdir playwright-project  cd playwright-project 
+
+					npm init -y  // y(yest à tous): générer le fichier package.json sans poser aucune question.
+					
+					npm install -D @playwright/test // D(installer en devDependency): package développement, pas pour l’exécution en production.
+					
+					npx playwright install
+				
+					👉 C'est 3 commande constituent la routine sur chaque projet avant le test.
+
+					👉 npm(Node Package Manager): Installer un projet, mettre à jour, supprimer, gérer les dépendances.
+					Exemples:
+						npm install
+						npm install -D @playwright/test
+						npm update
+						npm uninstall
+					👉 npx( Node Package eXecute): Exécuter un package sans l’installer globalement
+					Exemples:
+						npx playwright test
+						npx tsc
+						npx create-react-app monapp
+					Tu exécutes un outil directement, même s’il n’est pas installé globalement.
+			    </code></pre>
+			</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="accordion-title">🧱 2. Structure d'un mini-projet </div>
+    <div class="accordion-content">
+
+        <h4>Objets: config/, pages/, fixtures/, helpers/, tests/, package.json </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t21">
+            <label for="t21">Enoncé: Architecture du projet</label>
+			<div class="script">
+				<pre><code class="language-ts">
+								// mkdir config pages fixtures helpers tests  
+								playwright-project/
+								│
+								├── config/
+								│   └── playwright.config.ts
+								│
+								├── pages/
+								│   └── LoginPage.ts //→ le Page Objects
+								│
+								├── fixtures/
+								│   └── fixtures.ts //→ injections personnalisées
+								│
+								├── helpers/
+								│   └── dataHelper.ts //→ fonctions utilitaires
+								│
+								├── tests/
+								│   └── login.spec.ts //→ le scénarios 
+								│
+								└── package.json
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t22">
+            <label for="t22">⚙️1. package.json </label>
+			<div class="script">
+				<pre><code class="language-json">
+					{
+					  "name": "playwright-project",
+					  "version": "1.0.0",
+					  "scripts": {
+						"test": "playwright test"
+					  },
+					  "devDependencies": {
+						"@playwright/test": "^1.45.0"
+					  }
+					}
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t23">
+            <label for="t23">⚙️2. config/playwright.config.ts</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { defineConfig } from '@playwright/test';
+
+					export default defineConfig({
+					  testDir: './tests',
+					  timeout: 30000,
+					  retries: 1,
+					  use: {
+						headless: true,
+						screenshot: 'only-on-failure',
+						video: 'retain-on-failure',
+						trace: 'on-first-retry'
+					  }
+					});
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t24">
+            <label for="t24">⚙️3. pages/LoginPage.ts </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					//3.1 Importer les classes prédéfinie(Page & Locator)
+					import { Page, Locator } from '@playwright/test';
+
+					//3.2 Définir et Rendre la classe LoginPage disponible pour tous les fichiers
+					export class LoginPage {
+					  readonly page: Page; //Objet page: La page cible
+					  readonly username: Locator; // elt cible( son selecteur css)
+					  readonly password: Locator;
+					  readonly submit: Locator;
+					  readonly welcomeMessage: Locator;
+					  //👉 readonly pour empêcher les tests de modifier les locators
+
+					  constructor(page: Page) {
+						this.page = page;
+						this.username = page.locator('#username');
+						this.password = page.locator('#password');
+						this.submit = page.locator('#submit');
+						this.welcomeMessage = page.locator('#welcome');
+					  }
+					  
+					  // Se rendre à la page: pas de ".html" car c'est une route HTTP, pas un fichier 
+					  async goto() {
+						await this.page.goto('https://example.com/login');
+					  }
+
+					  // Remplir les champs et valider
+					  async login(user: string, pass: string) {
+						await this.username.fill(user);
+						await this.password.fill(pass);
+						await this.submit.click();
+					  }
+					}
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t25">
+            <label for="t25">⚙️4. fixtures/fixtures.ts </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { test as base } from '@playwright/test';
+					import { LoginPage } from '../pages/LoginPage';
+
+					export const test = base.extend({
+					  //const loginPage = new LoginPage(page => await use(loginPage);
+					  loginPage: async ({ page }, use) => { await use(new LoginPage(page));}
+					});
+
+					export const expect = base.expect;
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t26">
+            <label for="t26">⚙️5. helpers/dataHelper.ts </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					export function randomEmail() {
+					  const id = Math.floor(Math.random() * 100000);
+					  return `user${id}@test.com`;
+					}
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t27">
+            <label for="t27">⚙️6. tests/login.spec.ts </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { test, expect } from '../fixtures/fixtures';
+					import { randomEmail } from '../helpers/dataHelper';
+
+					test('login works', async ({ loginPage }) => {
+					  await loginPage.goto();
+
+					  const email = randomEmail();//génère une valeur aléatoire
+					  await loginPage.login(email, 'password123');
+
+					  await expect(loginPage.welcomeMessage).toBeVisible();
+					});
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t22">
+            <label for="t22">⚙️7. Lancer le test </label>
+			<div class="script">
+				<pre><code class="language-ts">
+                    npx playwright test
+			    </code></pre>
+			</div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="accordion-title">🧱 3. Exo1: Menu</div>
+    <div class="accordion-content">
+
+        <h4>Objets:  Tester les liens de navigation </h4>
+
+        <div class="task">
+            <input type="checkbox" id="t31">
+            <label for="t31">3.1 — Contexte </label>
+			<div class="script">
+				<pre><code class="language-ts">
+					Tu as des liens sous forme de boutons: Les “boutons” sont donc des &lt;a>
+					Tu veux vérifier que la classe ".activer" est sur le bon &lt;a> selon la page,
+					 et que les autres <a> ne l’ont pas.
+					 
+					Exemple: 
+					<a href="j6cours.html" class="btn popup-bottom activer">6</a>
+					✔️ Le bouton actif a la classe : .activer
+					✔️ Les autres boutons ont juste : .btn .popup, .btn .popup-bottom,  .default-btn
+					✔️ Le numéro du bouton est le texte du lien:  &lt;a ...>5&lt;/a>
+					Donc on veut cibler les boutons par leur texte.
+
+					Indications:
+					✔️ Le numéro du bouton est le texte du lien:  &lt;a ...>5&lt;/a>
+						toHaveText(String(pageNumber))
+					✔️ Le texte du lien commence par le numéro du bouton: &lt;a ...>5abcd&lt;/a>
+						toHaveText(new RegExp(`^${pageNumber}`))
+					✔️ Le texte du lien commence par un espace ou un saut de ligne, suivi par  le numéro du bouton
+					   toHaveText(new RegExp(`^\\s*${pageNumber}`))
+
+					Question
+					1.1 Ecrire le test de la première pagination: j3cours.html à J6cours.html
+					1.2 Ecrire le test de la deuxième pagination: j3exos.html à J6exos.html
+
+					Chaque test doit faire les 4 actions suivantes:
+					🔷 1. Ouvrir chaque page:j3cours.html → j6cours.html
+					🔷 2. Trouver le bouton actif .activer
+					🔷 3. Vérifier que son texte correspond au numéro de la page
+					🔷 4. Vérifie que les autres boutons n’ont pas .activer
+			    </code></pre>
+			</div>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" id="t32">
+            <label for="t32">3.2 — Structure</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					// mkdir tests
+					exemple1/
+					│
+					├── tests/
+					│   └── navigation.spec.ts //→ Teste la navigation sur les cours
+					|   └── navigation-exos.spec.ts //→ Teste la navigation sur les exos.
+					
+					// Routine de commandes
+					npm init -y  // y(yest à tous): générer le fichier package.json sans poser aucune question.
+					npm install -D @playwright/test // D(installer en devDependency): package développement, pas pour l’exécution en production.
+					npx playwright install
+			    </code></pre>
+			</div>
+        </div>
+		
+		<div class="task">
+            <input type="checkbox" id="t33">
+            <label for="t33">3.3 — navigation.spec.ts</label>
+
+			<div class="script">
+				<pre><code class="language-ts">
+					import { test, expect } from '@playwright/test'; // usage objets de Page( exple page)
+
+					test.describe('Pagination cours', () => {
+
+					  for (let pageNumber = 3; pageNumber &lt;= 6; pageNumber++) {
+						test(`Sur j${pageNumber}cours.html, seul le lien ${pageNumber} est .activer`, async ({ page }) => {
+							  // 🔷 1) Charger la page locale: Ouvrir chaque page(j3cours.html → j6cours.html)
+							  await page.goto(`file:///D:/POEI/QA%20Automation/TypeScript2/j${pageNumber}cours.html`);
+							  
+							  // 🔷 2) Trouver le bouton actif .activer
+							  // 2.1 Sélectionner tous les liens de pagination
+							  const links = page.locator('.pagination a.btn'); // les 2 classes communes à tous les liens
+							  // 2.2 Vérifier que le bon lien est actif
+							  const activeLink = page.locator('.pagination a.activer');
+							  
+							  // 🔷 3) Vérifier que le lien actif contient le bon numéro de page(pageNumber)
+							  //toHaveText(String(pageNumber));// String? converti en texte📌
+							  //RegExp(`^3`)= commence par 3
+							  //RegExp(`^\\s*3`)= commence par "un saut de ligne" suivi de 3
+							  await expect(activeLink).toHaveText(new RegExp(`^\\s*${pageNumber}`)); //📌 accepte  espacement et retour à la ligne
+
+							  // 🔷 4) Vérifier que les autres liens NE sont PAS actifs(dépourvus de la classe .activer)
+							  for (let i = 3; i &lt;= 6; i++) {
+									//const link = page.locator(`.pagination a.btn`, { hasText: String(i) });// 1,2,3,4,5,6,7 Problème: 2 pagination &lt;= collisions de sélecteurs
+									const link = page.locator('nav.pagination:not(.pagination-blue) a.btn', { hasText: String(i) });// Exclure la 2ème pagination
+									if (i === pageNumber) {
+									  await expect(link).toHaveClass(/activer/); //📌 charche la classe .activer
+									} else {
+									  await expect(link).not.toHaveClass(/activer/); //📌 dit s'il n'a pas trouvé la classe .activer
+									}
+							  }
+						});// test
+					  }// for
+					});// describe
+					
+					// Lancer le test
+					npx playwright test              
+			    </code></pre>
+			</div>
+        </div>
+		
+		
+		<div class="task">
+            <input type="checkbox" id="t34">
+            <label for="t34">3.4 — navigation-exos.spec.ts</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					import { test, expect } from '@playwright/test'; // usage objets de Page( exple page)
+
+					test.describe('Pagination exos', () => {
+					  for (let pageNumber = 3; pageNumber &lt;= 6; pageNumber++) {
+						test(`Sur j${pageNumber}exos.html, seul le lien ${pageNumber} est .activer`, async ({ page }) => {
+						  // 🔷 1) Charger la page locale: Ouvrir chaque page(j3exos.html → j6exos.html)
+						  await page.goto(`file:///D:/POEI/QA%20Automation/TypeScript2/j${pageNumber}exos.html`);
+
+						  // 🔷 2) Trouver le bouton actif .activer
+						  // // 2.1 Sélectionner tous les liens de pagination
+						  const links = page.locator('.pagination a.btn'); // les 2 classes communes à tous les liens
+						  // // 2.2 Vérifier que le bon lien est actif
+						  const activeLink = page.locator('.pagination-blue a.activer');
+
+						  // 🔷 3) Vérifier que le lien actif contient le bon numéro de page(pageNumber)
+						  //await expect(activeLink).toHaveText(String(pageNumber));//📌
+						  //await expect(activeLink).toHaveText(new RegExp(`^${pageNumber}`)); //📌RegExp()= commence par
+						  await expect(activeLink).toHaveText(new RegExp(`^\\s*${pageNumber}`)); //📌 accepte  espacement et retour à la ligne
+
+						  // 🔷 4) Vérifier que les autres liens NE sont PAS actifs(dépourvus de la classe .activer)
+						  for (let i = 3; i &lt;= 6; i++) {
+								//const link = page.locator(`.pagination a.btn`, { hasText: String(i) });// 1,2,3,4,5,6,7 Problème: 2 pagination &lt;= collisions de sélecteurs
+								//const link = page.locator('nav.pagination:not(.pagination-blue) a.btn', { hasText: String(i) });// Exclure la 2ème pagination
+								const link = page.locator('nav.pagination-blue a.btn', { hasText: String(i) });// Exclure la 2ème pagination
+								if (i === pageNumber) {
+								  await expect(link).toHaveClass(/activer/); //📌 charche la classe .activer
+								} else {
+								  await expect(link).not.toHaveClass(/activer/); //📌 dit s'il n'a pas trouvé la classe .activer
+								}
+						  }
+						});// test
+					  }// for
+					});// describe
+					
+					// Lancer le test
+					npx playwright test navigation-exos.spec.ts
+			    </code></pre>
+			</div>
+        </div>
+	</div>
+</div>	
+
+
+
+
+
+
+    <!--  PAGINATION  -->
+	<div class="tabcontent" id="tabcontent" style=" margin-top:3em; margin-bottom:0; " >
+		  <section class="containerPagination"  > 
+			<nav class="pagination"  >
+			  <a class="prev">&laquo;</a>
+			  <a   href="index.html"  class="btn popup">
+			      1
+				  <span class="popuptext">Sécurité procedurale !</span>
+			  </a>
+			  <a   href="secusymfony.html"   class="btn popup-bottom">
+			       2
+				   <span class="popuptext">Sécurité symfony !</span>
+			  </a> 
+			  <a   href="j3cours.html"  class="btn popup  default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Cours... </span>
+			  </a>
+			  <a   href="j4cours.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancés<br> Cours... </span>
+			  </a>
+			  <a   href="sql.html"  class="btn popup">
+			       5
+				   <span class="popuptext"> Sql</span>
+			  </a>
+			  <a   href="j6cours.html"   class="btn popup-bottom">
+			       6
+				   <span class="popuptext">Architecture<br> Cours... </span>
+			  </a>
+			  <a   href="j7cours.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777777<br> Cours... </span>
+			  </a>
+			  <a class="next">&raquo;</a>
+			</nav>
+			<nav class="pagination pagination-blue">
+			  <a class="prev">&laquo;</a>
+			  <a    onclick="filterSelection('ibnAtiyya')" class="btn" >1</a>
+			  <a    onclick="filterSelection('ar-Râzî')"   class="btn" >2</a>
+			  <a   href="#"  class="btn popup  default-btn">
+			      3
+				  <span class="popuptext">Types avancés<br> Exercices... </span>
+			  </a>
+			  <a   href="j4exos.html"   class="btn popup-bottom">
+			       4
+				   <span class="popuptext">Modélisations avancées<br> Exercices... </span>
+			  </a>
+			  <a   href="j5exos.html"  class="btn popup">
+			       5
+				   <span class="popuptext">Type avancé<br> Exercices... </span>
+			  </a>
+			  <a   href="j6exos.html"   class="btn popup-bottom activer">
+			       6
+				   <span class="popuptext">Mini-projet<br> TP... </span>
+			  </a>
+			  <a   href="j7exos.html"  class="btn popup">
+			       7
+				   <span class="popuptext">777777777777<br> Exercices... </span>
+			  </a>
+			  <!-- <a    onclick="filterSelection('zawawi')"    class="btn activer" style="display:none;">5</a>  Pourquoi je fais ça? car class "activer" doit être intialement présent sur un bouton pour pour se propager sur les autres bouton suivant le clic utilisateur. Je met un "display:none" car je ne veux pas voir de btn enfoncé  tant que l'utilisateur ne l'a pas touché.( un peu long ce p'tit bavardage mé cpa grav)  -->
+			  <a id="btnNotes" class="next btn popup toggle-btn" onclick="toggleNotes();">
+					&raquo;
+					<span class="popuptext" id="myPopup">Notes de bas de page !</span>
+			  </a>
+			</nav>
+		  </section> 
+	</div>		
+	<!--  fin PAGINATION  -->
+</main>
+
+
+<div id="notes" class="footer-notes"> <!--  Repliable (comme un panneau d’admin)    -->
+	<div class="conteneur-reponses"></div> <!-- séparateur -->
+	<footer style="height:auto; padding:0;" >     
+		<h3>
+		  Objectif: /////////  
+		</h3>	
+		<div class="flexfooter">
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">1. 11111111111111111111</h4>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ locator(selector, options)</li>
+				      <li> </li>
+				      <li> ✔ locator('.btn', { hasText: String(i) })</li>
+				      <li> ✔ locator('div', { has: locator('span.highlight') })</li>
+				      <li> ✔ locator('.item').nth(2) prend un elt précis</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     permettent de tranceformer des types existants.<br>
+					 👉 Ce sont les “super‑pouvoirs” de TypeScript.
+				   </p>
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">2. 22222222222222222222222222</h4>
+				   <b>function identity&lt;T>(value: T): T { ... }</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ ça permet d'inventer des types flexibles</li>
+				      <li> ✔ ça évite les répétitions </li>
+				      <li> ✔ ça améliore la sécurité du code</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     C'est pour de tranceformer des types existants.<br>
+					 👉C’est le cœur du TypeScript moderne.
+				   </p>
+				   
+
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">3. 333333333333333333333333</h4>
+				   <b>On parle d'Interfaces génériques avancées et de types paramétrés </b>
+				   <p style="padding-bottom:0; margin-bottom:0;">
+				      Comment écrire : 
+				   </p>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> interface ApiResponse&lt;T> {</li>
+				      <li> &emsp;data: T; </li>
+				      <li> &emsp;status: number;</li>
+				      <li> }</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+					Et comment les utiliser avec :<br>
+					  &emsp;→  Des types complexes, des objets, <br>
+					  &emsp;→  des tableaux, des fonctions<br>
+					👉 C’est ce qui permet de modéliser des réponses API, des actions Playwright📌, etc. 
+				   </p>
+				   
+				   
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">4. 44444444444444444444444444</h4>
+				   <b>Il y en a 3 fonctions typées:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li> ✔ Les fonctions génériques,</li>
+				      <li> ✔ les fonctions qui retournent des types complexes </li>
+				      <li> ✔ les fonctions qui manipulent des objets typés</li>
+				      <li> ✔ et les signatures de fonction</li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉 Ça te prépare directement à Playwright, <br>
+					  car Playwright utilise énormément de types complexes.
+				   </p>
+			</div>
+			<div>
+				   <h4 style="color:gold; padding-bottom:0; margin-bottom:0;">5. 55555555555555555555555555555</h4>
+				   <b>C’est le niveau “maestro”:</b>
+				   <ul style="padding-block:0; margin-block:0;">
+				      <li></li>
+				      <li>  T extends U ? X : Y </li>
+				      <li> </li>
+				   </ul>
+				   <p style="padding-top:0; margin-top:0;">
+				     👉C’est ce qui permet à TypeScript d’être intelligent.
+				   </p>
+				  
+				 
+			
+				  </p>
+
+			</div>
+		</div>
+		
+		<div class="content-footer" style="margin-top:0;">         
+			<div class="ndreda-footer"> 		  
+				<ul type="square">
+					<li>Generic Types : Types paramétrés</li>
+					<li>Generic Interfaces: Interfaces génériques</li>
+					<li>Call signatures: Signatures de fonction </li>
+				</ul>
+			</div>		
+			<span class="copyright_"><span style="color:gray;">2019 &copy; -</span> Master Handi</span>
+		</div>	  
+	</footer>
+</div>
+
+<script>
+    const PAGE_PREFIX = "layout_"; 
+</script>
+<script src="dependance/checklist.js"></script>
+
+</body>
+</html>

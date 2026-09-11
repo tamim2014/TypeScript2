@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Jour5</title><!-- Mardi 02.06.26  -->
+    <title>Jour6</title><!-- Mardi 02.06.26  -->
 	<link rel="stylesheet" href="dependance/prism.css" media="screen" />
     <link rel="stylesheet" href="dependance/dark.css" >
     <link rel="stylesheet" href="dependance/pagination.css" >
@@ -31,10 +31,10 @@
 			</div>	
 			<!-- contenu du footer -->
 			<div id="ndreda-footerG" style="width:100%;" >
-			    <h1>🛡️  Cours: Types avancés + logique métier + tests paramétrés  </h1>
+			    <h1>🛡️ Structure d'un projet (modules, patterns, helpers, pages propres)  </h1>
 			</div>
 		</div>		
-		 <small class="copyright_"><span style="color:gray;">Jour5  -</span> <i style="color:#555">Cours</i></small> 
+		 <small class="copyright_"><span style="color:gray;">Jour6  -</span> <i style="color:#555">Cours</i></small> 
 		 <span class="marfa3 logo-emoji">🔷</span>
 	</div>	  
 </header>
@@ -42,61 +42,62 @@
 
 <div class="conteneur-reponses separateur1"></div> <!-- séparateur -->
 <main class="contenu">
-<!-- <h1>🛡️ Feuille de Route Sécurité — Lundi 25.05.26</h1>  -->
 
 <!-- SECTION 1 -->
 <div class="section">
-    <div class="accordion-title">🧱 1) Types avancés : transformer des types comme un architecte</div>
+    <div class="accordion-title">🧱 Structure du projet (le squelette propre)</div>
     <div class="accordion-content">
 
-        <h4>Objets: Utiliser des outils TypeScript qui permettent de créer des types dynamiques, adaptés à la logique métier. </h4>
+        <h4>Objets: Mettre en place une architecture claire </h4>
         <div class="task">
             <input type="checkbox" id="t11">
-            <label for="t11">1.1 — Mapped Types (types mappés) - Créer un type à partir d’un autre type.</label>
+            <label for="t11">A — Cinque dossiers de base.</label>
 			<div class="script">
 				<pre><code class="language-ts">
-				
-					type Optional&lt;T> = { [K in keyof T]?: T[K]; };
-					
-					➡️ Tu rends toutes les propriétés optionnelles.
-					➡️ C’est comme Partial&lt;T>, mais fait maison.
+					✔️ /tests/ → les scénarios
+
+					✔️ /pages/ → les Page Objects
+
+					✔️ /fixtures/ → les injections personnalisées
+
+					✔️/helpers/ → les fonctions utilitaires
+
+					✔️ /config/ → la configuration Playwright
+
+					👉 À partir de là, ton projet ressemble à un vrai framework QA
 			    </code></pre>
 			</div>
         </div>
 
-        <div class="task">
-            <input type="checkbox" id="t12">
-            <label for="t12">1.2 — Remapper les clés (Key Remapping): Changer le nom des propriétés.</label>
+
+		
+		<div class="task">
+            <input type="checkbox" id="t17">
+            <label for="t17">B — Premier vrai test structuré</label>
 			<div class="script">
 				<pre><code class="language-ts">
-					type PrefixKeys&lt;T> = {
-					  [K in keyof T as `test_${string & K}`]: T[K];
-					};
-					
-					//Si tu as: 
-					type User = { email: string; password: string };
-					//Tu obtiens :
-					{
-					  test_email: string;
-					  test_password: string;
-					}
-					➡️ ${string & K}  =  suffixe de la clé.
-					➡️ Ultra utile pour générer des structures de test.
+					//Tu écris un test propre :
+
+					test('login', async ({ loginPage }) => {
+					  await loginPage.goto();
+					  await loginPage.login('andjib', 'secret');
+					  await expect(loginPage.welcomeMessage).toBeVisible();
+					});
+
+					👉 C’est lisible, maintenable, professionnel.
 			    </code></pre>
 			</div>
         </div>
-
-        <div class="task">
-            <input type="checkbox" id="t13">
-            <label for="t13">1.3 — Types conditionnels avancés.</label>
+		<div class="task">
+            <input type="checkbox" id="t18">
+            <label for="t18">C — Résumé</label>
 			<div class="script">
 				<pre><code class="language-ts">
-					type ExtractStringProps&lt;T> = {
-					  [K in keyof T]: T[K] extends string   ?   T[K] : never;
-					};
-
-					➡️ Tu filtres les propriétés selon leur type.
-					➡️ Très utile pour générer des datasets ou des validations.
+					Jour 6 = architecture
+					  ✔️ Modules + patterns + helpers
+					  ✔️ Page Objects propres
+					  ✔️ Fixtures personnalisées
+					Tu deviens structuré
 			    </code></pre>
 			</div>
         </div>
@@ -106,96 +107,70 @@
 
 <!-- SECTION 2 -->
 <div class="section">
-    <div class="accordion-title">🧱 2) Logique métier typée</div>
+    <div class="accordion-title">🧱 1) Module</div>
     <div class="accordion-content">
 
-        <h4>Objets: Modéliser des règles métier - Règles d’accès(exemple d'accès selon le rôle).</h4>
+        <h4>Objets: Séparer les classes selon les tâches - POO( bloc par bloc)</h4>
 
-        <div class="task">
+	    <div class="task">
             <input type="checkbox" id="t21">
-            <label for="t21">2.1 — On défini le rôle</label>
+            <label for="t21">1.2 — Modules TypeScript (import/export propre)</label>
 			<div class="script">
 				<pre><code class="language-ts">
-					type Role = "admin" | "user" | "guest";
+				   Tu apprends à découper ton code :
+
+					   ✔️ import { LoginPage } from '../pages/LoginPage'
+					   ✔️ export class LoginPage {}
+
+					   ✔️ éviter les dépendances circulaires// ?
+
+					   ✔️ comprendre la logique ES Modules// ?
+				   
+				   👉 Tu deviens à l’aise avec l’architecture TypeScript.
 			    </code></pre>
 			</div>
         </div>
 
-        <div class="task">
-            <input type="checkbox" id="t22">
-            <label for="t22">2.2 — Ensuite, la permission</label>
-			<div class="script">
-				<pre><code class="language-ts">
-					type Permissions = {
-					  dashboard: boolean;
-					  settings: boolean;
-					  billing: boolean;
-					};
-			    </code></pre>
-			</div>
-        </div>
-
-        <div class="task">
-            <input type="checkbox" id="t23">
-            <label for="t23" id="j323">2.3 — Enfin,  la règle d'accès -  Rôle: { Permissions ... }</label>
-			<div class="script">
-				<pre><code class="language-ts">
-					type RolePermissions = Record&lt;Role, Permissions>;
-			    </code></pre>
-			</div>
-        </div>
-
-        <div class="task">
-            <input type="checkbox" id="t24">
-            <label for="t24">2.4 —  Exemple(Dataset) :</label>
-			<div class="script">
-				<pre><code class="language-ts">
-					const permissions: RolePermissions = {
-					  admin: { dashboard: true, settings: true, billing: true },
-					  user: { dashboard: true, settings: false, billing: false },
-					  guest: { dashboard: false, settings: false, billing: false }
-					};
-					➡️ Tu peux maintenant écrire des tests qui s’adaptent automatiquement au rôle.
-			    </code></pre>
-			</div>
-        </div>
     </div>
 </div>
 
 <!-- SECTION 3 -->
 <div class="section">
-    <div class="accordion-title">🧱 3) Tests paramétrés (Playwright Pro)</div>
+    <div class="accordion-title">🧱 2) Page Object</div>
     <div class="accordion-content">
 
-        <h4>Objets:  écrire des tests qui tournent plusieurs fois, avec des données différentes, sans dupliquer le code. </h4>
+        <h4>Objets:  Rendre chaque classe(chacun de ses objets), testable. </h4>
 
         <div class="task">
             <input type="checkbox" id="t31">
-            <label for="t31">3.1 — Exemple simple: Test d'accès au dashboard </label>
+            <label for="t31">1.3 — Page Objects avancés (propres, lisibles, testables)</label>
 			<div class="script">
 				<pre><code class="language-ts">
-					// test( `nomTest`, async({page})  => {actions, permissions} );
-					
-					const roles = ["admin", "user", "guest"] as const;
+					//Tu construis des pages propres, avec :
+					  ✔️ des locators bien nommés
+					  ✔️ des méthodes claires
+					  ✔️ des actions atomiques
+					  ✔️ des patterns cohérents
 
-					for (const role of roles) {
-						test(`access for ${role}`, async ({ page }) => {
-							// test action(s)
-							await page.goto("/dashboard");
-							// test permission
-							const canAccess = permissions[role].dashboard;
-							if (canAccess) {
-							  await expect(page).toHaveURL(/dashboard/);
-							} else {
-							  await expect(page).toHaveURL(/login/);
-							}
-						});
+					//Exemple :
+
+					export class LoginPage {
+					  constructor(page) {
+						this.page = page;
+						this.username = page.locator('#username');
+						this.password = page.locator('#password');
+						this.submit = page.locator('#submit');
+					  }
+
+					  async goto() { await this.page.goto('/login'); }
+						
+
+					  async login(user, pass) {
+						await this.username.fill(user);
+						await this.password.fill(pass);
+						await this.submit.click();
+					  }
 					}
-					➡️ const = empêche de réassigner la variable roles.Mais les elt de la liste("admin", "user", "guest") restent modifiables.
-					➡️ ${role} = le role à tester: choisi parmis la liste  roles 
-					➡️ 3 tests générés automatiquement.
-					➡️ Logique métier + dataset + test paramétré.
-
 			    </code></pre>
 			</div>
         </div>
@@ -204,153 +179,170 @@
 
 <!-- SECTION 3 -->
 <div class="section">
-    <div class="accordion-title">🧱 4) Tests paramétrés avec fixtures + Page Objects</div>
+    <div class="accordion-title">🧱 3) Helper</div>
     <div class="accordion-content">
 
-        <h4>Objets: Test générique - Plusieurs paramètres à la fois( utilisateur, son rôle, etc ...) </h4>
+        <h4>Objets: Pour chaque action; une fonction dédiée. </h4>
 
         <div class="task">
             <input type="checkbox" id="t41">
-            <label for="t41">4.1 — Test de l'user + test de son role: Tu combines tout ce que tu as appris. </label>
+            <label for="t41"> Helpers (les fonctions utilitaires - petites fonctions qui rendent tout plus propre)</label>
 			<div class="script">
 				<pre><code class="language-ts">
-					const users = [
-					  { email: "admin@test.com", password: "123456", role: "admin" },
-					  { email: "user@test.com", password: "123456", role: "user" }
-					] as const;
-
-					for (const u of users) {
-					  test(`login test for ${u.role}`, async ({ loginPage }) => {
-						// test actions
-						await loginPage.goto();
-						await loginPage.email.fill(u.email);
-						await loginPage.password.fill(u.password);
-						await loginPage.submit.click();
-						
-						// test permissions
-						const canAccess = permissions[u.role].dashboard;
-						if (canAccess) {
-						  await expect(loginPage.errorMessage).toBeHidden();
-						} else {
-						  await expect(loginPage.errorMessage).toBeVisible();
-						}
-					  });
-					}
-					➡️ Tu génères des tests dynamiques.
-					➡️ Tu relies types, dataset, logique métier, fixtures, Page Objects.
-					C’est du Playwright niveau ingénieur QA.
+					Tu crées des helpers réutilisables :
+					  ✔️ randomEmail()
+					  ✔️ waitForText(page, 'Bienvenue')
+					  ✔️ cleanInput(page, locator)
+					  ✔️ screenshotOnFailure(testInfo)
+					👉 Tu factorises, tu deviens efficace.
 			    </code></pre>
 			</div>
         </div>
 
-
-        <div class="task">
-            <input type="checkbox" id="t42">
-            <label for="t42">4.2 — Rappel: Notion de fixture sur TypeScript: Fixture = dataset statique en mémoire.</label>
-			<div class="script">
-				<pre><code class="language-java">
-					Les données ne sont pas persistées dans la base( comme chez symfony).
-					Pas de base de données dans les tests.
-					Tu crées des objets en mémoire, souvent des tableaux, des maps, des datasets typés.
-					Ces données servent à piloter tes tests (login, rôles, permissions, scénarios).
-					
-					Dans tous les cas la fixture est un jeu de données factice. Elle reste:
-					  🔹 un jeu de données
-					  🔹 typé
-					  🔹 immuable
-					utilisé pour générer des tests dynamiques,
-					consommé par ton code de test
-
-					// Exemple précedent:
-					const users = [
-					  { email: "admin@test.com", password: "123456", role: "admin" },
-					  { email: "user@test.com", password: "123456", role: "user" }
-					] as const;
-					➡️ Ici, const users = [...] as const est une fixture.
-					➡️ Mais une fixture en mémoire, pas une fixture en base comme dans Symfony.
-			    </code></pre>
-			</div>
-        </div>
-	</div>
-</div>		
+ 
 		
+	</div>
+</div>
+
 
 
 <!-- SECTION 5 -->
 <div class="section">
-    <div class="accordion-title">🧱 5)  Bonus : Tests paramétrés typés</div>
+    <div class="accordion-title">🧱 4) Fixture</div>
     <div class="accordion-content">
-        <h4>Objets: Typer les données du test( pour éviter les erreurs). </h4>
+
+        <h4>Objets: Injecter des objets(avec leurs données) dans les tests. </h4>
         <div class="task">
-            <input type="checkbox" id="t51">
-            <label for="t51"> Le type, la fixture, et les tests  </label>
+            <input type="checkbox" id="t15">
+            <label for="t15"> Fixtures personnalisées (le vrai niveau Playwright)</label>
 			<div class="script">
 				<pre><code class="language-ts">
-					// 5.1 Le type
-					interface LoginScenario {
-					  user: TestUser;
-					  expectedSuccess: boolean;
-					}
+					//Tu apprends à injecter des objets dans les tests :
 
-					// 5.2 La fixture
-					const scenarios: LoginScenario[] = [
-					  { user: users.admin, expectedSuccess: true },
-					  { user: users.user, expectedSuccess: true },
-					  { user: users.guest, expectedSuccess: false }
-					];
+					const test = base.extend({
+					  loginPage: async ({ page }, use) => { await use(new LoginPage(page)); }
+					});
 
-					// 5.3 Le test
-					for (const s of scenarios) {
-					  test(`login scenario for ${s.user.role}`, async ({ loginPage }) => { // LoginPage 👉  Cf J4/Cours/4.2
-						await loginPage.goto();
-						await loginPage.email.fill(s.user.email);
-						await loginPage.password.fill(s.user.password);
-						await loginPage.submit.click();
+					//ou
 
-						if (s.expectedSuccess) {
-						  await expect(loginPage.errorMessage).toBeHidden();
-						} else {
-						  await expect(loginPage.errorMessage).toBeVisible();
-						}
-					  });
-					}
-					➡️ Tu as un framework de tests paramétrés.
-					➡️ Tu peux ajouter des scénarios sans toucher au code du test.
+					const test = base.extend({
+					  loginPage: async ({ page }, use) => {
+						const loginPage = new LoginPage(page);
+						await use(loginPage);
+					  }
+					});
+					👉 Tu comprends l’injection, tu deviens structuré.
 			    </code></pre>
 			</div>
         </div>
     </div>
 </div>
+
 
 <!-- SECTION 6 -->
 <div class="section">
-    <div class="accordion-title">🧱 6)  Bonus : Tests paramétrés typés</div>
+    <div class="accordion-title">🧱 5) Pattern</div>
     <div class="accordion-content">
-        <h4>Objets: Typer les données du test( pour éviter les erreurs). </h4>
-        <div class="task">
-            <input type="checkbox" id="t61">
-            <label for="t61"> Le type, la fixture, et les tests  </label>
+
+        <h4>Objets: fonctions, objets, mthds  invocables. </h4>
+		<div class="task">
+            <input type="checkbox" id="t16">
+            <label for="t16">5.1 — Patterns de projet (le cerveau du Jour 6)</label>
 			<div class="script">
 				<pre><code class="language-ts">
-					 ✔️ Mapped Types → transformer les types
+					Tu mets en place :
+					   ✔️ Pattern Page Object
+					   ✔️ Pattern Fixture
+					   ✔️ Pattern Helper
+					   ✔️ Pattern Config
+					   ✔️ Pattern Test Clean
+					👉 Tu commences à penser comme un QA architecte.
+			    </code></pre>
+			</div>
+        </div>
+		<div class="task">
+            <input type="checkbox" id="t160">
+            <label for="t160">5.2 — Exemple de patterns</label>
+			<div class="script">
+				<pre><code class="language-ts">
+					🟦 1) Pattern Page (Page Object Model): Tu représentes chaque page de ton application comme une classe.
+					export class LoginPage {
+					  readonly username: Locator;
+					  readonly password: Locator;
+					  readonly submit: Locator;
 
-					 ✔️ Key Remapping → renommer les propriétés
+					  constructor(page: Page) {
+						this.username = page.locator('#username');
+						this.password = page.locator('#password');
+						this.submit = page.locator('#submit');
+					  }
 
-					 ✔️ Types conditionnels → filtrer selon la logique métier
+					  async login(user: string, pass: string) {
+						await this.username.fill(user);
+						await this.password.fill(pass);
+						await this.submit.click();
+					  }
+					}
+					await loginPage.login('andjib', 'password123'); // 👉 C'est ça le pattern
+					
+					🟦 2) Pattern Fixture (Playwright Fixtures): 
+					//Tu crées des objets réutilisables injectés automatiquement dans tes tests.
+					const test = base.extend({
+					  loginPage: async ({ page }, use) => {
+						await use(new LoginPage(page));
+					  }
+					});
+					//Ensuite dans ton tests:
+					test('login', async ({ loginPage }) => {
+					  await loginPage.login('andjib', 'password123');
+					}); // 👉 C'est ça le pattern
+					
+					🟦 3) Pattern Helper
+					// Des fonctions utilitaires réutilisables
+					Exemples :
+						randomEmail()
+						generatePassword()
+						waitForApi()
+						formatDate()
+					//Ce sont des outils que tu mets dans un fichier helpers.ts. Exemples:
+						  randomEmail()
+						  generatePassword()
+						  waitForApi()
+						  formatDate()
+					Ils ne représentent pas une page.
+					Ils ne sont pas injectés comme fixtures.
+					Ils servent juste à simplifier tes tests.
 
-					 ✔️ RolePermissions → modéliser les règles d’accès
+					C’est ça, le Pattern Helper.
+					
+					🟦 4) Pattern Module
+					//  Tu organises ton projet en modules logiques.
+					/pages
+					  LoginPage.ts
+					  DashboardPage.ts
 
-					 ✔️ Tests paramétrés → générer plusieurs tests automatiquement
+					/fixtures
+					  test-fixtures.ts
 
-					 ✔️ Scénarios typés → architecture scalable et propre
+					/helpers
+					  random.ts
+					  utils.ts
 
-					 ✔️ Playwright + TS → framework professionnel
+					/tests
+					  login.spec.ts
+					  dashboard.spec.ts
+
+					Tu crées une architecture propre
+					C’est ça, le Pattern Module.
+					
+					🎨 Pattern = “comment tu organises”
+					🎨 Module =  “ce que tu utilises”
+					    => Pattern Module = organisation des dossiers
 			    </code></pre>
 			</div>
         </div>
     </div>
 </div>
-
 
     <!--  PAGINATION  -->
 	<div class="tabcontent" id="tabcontent" style=" margin-top:3em; margin-bottom:0; " >
@@ -365,19 +357,19 @@
 			       2
 				   <span class="popuptext">Sécurité symfony !</span>
 			  </a> 
-			  <a   href="j3cours.html"  class="btn popup  default-btn">
+			  <a   href="#"  class="btn popup default-btn">
 			      3
 				  <span class="popuptext">Types avancés<br> Cours... </span>
 			  </a>
-			  <a   href="j4cours.html"   class="btn popup-bottom">
+			  <a   href="debug.html"   class="btn popup-bottom">
 			       4
-				   <span class="popuptext">Modélisations avancés<br> Cours... </span>
+				   <span class="popuptext">Débug ⚠️</span>
 			  </a>
-			  <a   href="#"  class="btn popup activer">
+			  <a   href="sql.html"  class="btn popup">
 			       5
-				   <span class="popuptext">Tests paramétrés<br> Cours... </span>
+				   <span class="popuptext"> Sql</span>
 			  </a>
-			  <a   href="j6cours.html"   class="btn popup-bottom">
+			  <a   href="j6cours.html"   class="btn popup-bottom activer">
 			       6
 				   <span class="popuptext">Architecture<br> Cours... </span>
 			  </a>
@@ -391,7 +383,7 @@
 			  <a class="prev">&laquo;</a>
 			  <a    onclick="filterSelection('ibnAtiyya')" class="btn" >1</a>
 			  <a    onclick="filterSelection('ar-Râzî')"   class="btn" >2</a>
-			  <a   href="j3exos.html"  class="btn popup  default-btn">
+			  <a   href="j3exos.html"  class="btn popup  default-btn"> 
 			      3
 				  <span class="popuptext">Types avancés<br> Exercices... </span>
 			  </a>
@@ -409,7 +401,7 @@
 			  </a>
 			  <a   href="j7exos.html"  class="btn popup">
 			       7
-				   <span class="popuptext">777777777777<br> Exercices... </span>				   
+				   <span class="popuptext">777777777777<br> Exercices... </span>
 			  </a>
 			  <!-- <a    onclick="filterSelection('zawawi')"    class="btn activer" style="display:none;">5</a>  Pourquoi je fais ça? car class "activer" doit être intialement présent sur un bouton pour pour se propager sur les autres bouton suivant le clic utilisateur. Je met un "display:none" car je ne veux pas voir de btn enfoncé  tant que l'utilisateur ne l'a pas touché.( un peu long ce p'tit bavardage mé cpa grav)  -->
 			  <a id="btnNotes" class="next btn popup toggle-btn" onclick="toggleNotes();">
@@ -515,10 +507,10 @@
 		<div class="content-footer" style="margin-top:0;">         
 			<div class="ndreda-footer"> 		  
 				<ul type="square">
-				    <li>Generic symbol:  &lt; ... ></li> 
-					<li>Generic Types : Types paramétrés</li>
-					<li>Generic Interfaces: Interfaces génériques</li>
-					<li>Call signatures: Signatures de fonction </li>
+				    <li>Les actions Playwright ?</li> 
+					<li>fill, click, goto, etc</li>
+					<li>Les assertions ?</li>
+					<li>expect(...) </li>
 				</ul>
 			</div>		
 			<span class="copyright_"><span style="color:gray;">2019 &copy; -</span> Master Handi</span>
